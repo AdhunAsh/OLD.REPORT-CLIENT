@@ -10,8 +10,6 @@ const RelatedProducts = ({ sizes }) => {
     useEffect(() => {
         if (products.length > 0) {
             let products_copy = products.slice();
-            console.log(sizes);
-
             products_copy = products.filter((item) =>
                 item.sizes.some((size) => sizes.includes(size))
             );
