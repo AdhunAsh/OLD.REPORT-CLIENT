@@ -9,16 +9,16 @@ import star_dull_icon from "../assets/star_dull_icon.png"
 
 const Product = () => {
     const { productId } = useParams();
-    const { products, currency, addToCart } = useContext(ShopContext);
+    const { products , currency, addToCart } = useContext(ShopContext);
     const [productData, setProductData] = useState(false);
     const [image, setImage] = useState("");
     const [size, setSize] = useState("");
 
     const fetchProductData = async () => {
         products.map((item) => {
-            if (item._id === productId) {
+            if (item.id === parseInt(productId)) {
                 setProductData(item);
-                setImage(item.image[0]);
+                setImage(item.images[0].image);
                 return null;
             }
         });
@@ -35,11 +35,11 @@ const Product = () => {
                 {/* Product Images */}
                 <div className="flex-1 flex flex-col-reverse gap-3 sm:flex-row">
                     <div className="flex sm:flex-col overflow-x-auto sm:overflow-y-scroll justify-between sm:justify-normal sm:w-[18.7%] w-full">
-                        {productData.image.map((item, index) => (
+                        {productData.images.map((item, index) => (
                             <img
-                                onClick={() => setImage(item)}
+                                onClick={() => setImage(item.image)}
                                 className="w-[24%] sm:w-full sm:mb-3 flex-shrink-0 cursor-pointer"
-                                src={item}
+                                src={item.image}
                                 key={index}
                                 alt=""
                             />
@@ -70,7 +70,7 @@ const Product = () => {
                         {productData.description}
                     </p>
                     <div className="flex flex-col gap-4 my-8">
-                        <p>SelectSize</p>
+                        <p>Select Size</p>
                         <div className="flex gap-2">
                             {productData.sizes.map((item, index) => (
                                 <button
@@ -85,7 +85,7 @@ const Product = () => {
                             ))}
                         </div>
                     </div>
-                    <button onClick={()=> addToCart(productData._id,size)} className="bg-black text-white px-8 py-3 active:bg-gray-700">
+                    <button onClick={()=> addToCart(productData.id,size)} className="bg-black text-white px-8 py-3 active:bg-gray-700">
                         ADD TO CART
                     </button>
                     <hr className="mt-8 sm:4/5"></hr>

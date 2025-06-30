@@ -1,17 +1,20 @@
 import { createContext, useEffect } from "react";
-import { products } from "../assets/products/products";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import instance from "../axios";
 
 export const ShopContext = createContext();
 
 const ShopContextProvider = (props) => {
     const currency = "₹";
     const delivery_fee = 10;
+    const backendUrl = import.meta.env.VITE_BACKEND_URL
     const [search, setSearch] = useState("");
     const [showSearch, setShowSearch] = useState(false);
     const [cartItems, setCartItems] = useState({})
+    const [products, setProducts] = useState([])
     const navigate = useNavigate();
 
     const addToCart = async (itemId, size) => {
@@ -62,7 +65,7 @@ const ShopContextProvider = (props) => {
     const getCartAmount = () => {
         let totalAmount = 0;
         for(const items in cartItems) {
-            let itemInfo = products.find((product)=> product._id === items)
+            let itemInfo = products.find((product)=> parseInt(product.id) === parseInt(items))
             for(const item in cartItems[items]) {
                 try {
                     if(cartItems[items][item] > 0) {
@@ -74,7 +77,26 @@ const ShopContextProvider = (props) => {
             }
         }
         return totalAmount
-    } 
+    }
+
+    const getProductsData = async () => {
+        try {
+            console.log('calling API:', backendUrl + '/api/products/');
+            const res = await instance.get('/api/products/')
+            console.log(res) 
+            if (res.data) {
+                setProducts(res.data);
+            } else {
+                toast.error(res.data)
+            }
+        } catch (error) {
+           toast.error(error.res?.data?.message || 'Failed to fetch product list'); 
+        }
+    }
+
+    useEffect(()=>{
+        getProductsData()
+    },[])
 
     const value = {
         products,
@@ -89,7 +111,8 @@ const ShopContextProvider = (props) => {
         getCartCount,
         updateQuantity,
         getCartAmount,
-        navigate
+        navigate,
+        backendUrl
     };
     return (
         <ShopContext.Provider value={value}>

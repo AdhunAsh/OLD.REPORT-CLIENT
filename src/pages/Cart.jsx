@@ -3,6 +3,8 @@ import { ShopContext } from '../context/ShopContext'
 import Title from "../components/Title"
 import bin_icon from "../assets/bin_icon.png"
 import CartTotal from '../components/CartTotal'
+import { toast } from 'react-toastify'
+import { backendUrl } from '../../../admin/src/App'
 
 
 const cart = () => {
@@ -16,7 +18,7 @@ const cart = () => {
       for(const item in cartItems[items]){
         if(cartItems[items][item] > 0){
           tempData.push({
-            _id: items,
+            id: items,
             size: item,
             quantity: cartItems[items][item]
           })
@@ -25,6 +27,17 @@ const cart = () => {
     }
     setCartData(tempData)
   },[cartItems])
+
+  const handleStoreCart = async () => {
+    try {
+      await axios.post( `${backendUrl}/api/cart/`, { cart: cartData });
+      toast.success("item added to cart!")
+      navigate('/placeorder');
+    } catch (err) {
+      // Optionally show a toast
+      toast.error("item not added")
+    }
+  };
 
   return (
     <div className='border-t pt-14'>
@@ -35,11 +48,11 @@ const cart = () => {
       <div>
         {
           cartData.map((item, index)=>{
-            const productData = products.find((product)=> product._id === item._id);
+            const productData = products.find((product)=> parseInt(product.id) === parseInt(item.id));
             return (
               <div key= {index} className='py-4 border-t border-b text-gray-700 grid grid-cols-[4fr_0.5_0.5fr] sm:grid-cols-[4fr_2fr_0.5fr] items-center gap-4'> 
                   <div className='flex items-start gap-6'>
-                      <img className='w-16 sm:w-20' src= {productData.image[0]} alt="" />
+                      <img className='w-16 sm:w-20' src= {productData.images[0].image} alt="" />
                       <div>
                         <p className='text-xs sm:text-lg font-medium '>{productData.name}</p>
                         <div className='flex items-center gap-5 mt-2'>
@@ -48,8 +61,8 @@ const cart = () => {
                         </div>
                       </div>
                   </div>
-                  <input onChange={(e)=> e.target.value === '' || e.target.value === '0' ? null : updateQuantity(item._id, item.size,Number(e.target.value))} className='border max-w-10 sm:max-w-20 px-1 sm:px-2 py-1' type="number" min={1} defaultValue={item.quantity} />
-                  <img onClick={()=>updateQuantity(item._id, item.size, 0)} className='w-4 mr-4 sm:w-5 cursor-pointer hover:bg-gray-300' src= {bin_icon} alt="" />
+                  <input onChange={(e)=> e.target.value === '' || e.target.value === '0' ? null : updateQuantity(item.id, item.size,Number(e.target.value))} className='border max-w-10 sm:max-w-20 px-1 sm:px-2 py-1' type="number" min={1} defaultValue={item.quantity} />
+                  <img onClick={()=>updateQuantity(item.id, item.size, 0)} className='w-4 mr-4 sm:w-5 cursor-pointer hover:bg-gray-300' src= {bin_icon} alt="" />
               </div>
             )
           })
@@ -59,7 +72,7 @@ const cart = () => {
         <div className='w-full sm:w-[450px]'>
           <CartTotal />
           <div className='w-full text-end'>
-            <button onClick={()=>navigate('/placeorder')} className='bg-black text-white text-sm my-8 px-8 py-3 hover:bg-gray-700'>PROCEED TO CHECKOUT</button>
+            <button onClick={handleStoreCart} className='bg-black text-white text-sm my-8 px-8 py-3 hover:bg-gray-700'>PROCEED TO CHECKOUT</button>
           </div>
         </div>
       </div>
