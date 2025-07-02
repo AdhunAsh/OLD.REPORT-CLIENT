@@ -3,22 +3,23 @@ import { useParams } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import Policy from "../components/Policy";
 import RelatedProducts from "../components/RelatedProducts";
-import star_icon from "../assets/star_icon.png"
-import star_dull_icon from "../assets/star_dull_icon.png"
-
+import star_icon from "../assets/star_icon.png";
+import star_dull_icon from "../assets/star_dull_icon.png";
 
 const Product = () => {
     const { productId } = useParams();
-    const { products , currency, addToCart } = useContext(ShopContext);
+    const { products, currency, addToCart, backendUrl } = useContext(ShopContext);
     const [productData, setProductData] = useState(false);
     const [image, setImage] = useState("");
     const [size, setSize] = useState("");
+    const [subcategory, setSubcategory] = useState('')
 
     const fetchProductData = async () => {
         products.map((item) => {
-            if (item.id === parseInt(productId)) {
+            if (parseInt(item.id) === parseInt(productId)) {
                 setProductData(item);
-                setImage(item.images[0].image);
+                setImage(`${backendUrl}${item.images[0].image}`);
+                setSubcategory(item.subcategory)
                 return null;
             }
         });
@@ -37,9 +38,9 @@ const Product = () => {
                     <div className="flex sm:flex-col overflow-x-auto sm:overflow-y-scroll justify-between sm:justify-normal sm:w-[18.7%] w-full">
                         {productData.images.map((item, index) => (
                             <img
-                                onClick={() => setImage(item.image)}
+                                onClick={() => setImage(`${backendUrl}${item.image}`)}
                                 className="w-[24%] sm:w-full sm:mb-3 flex-shrink-0 cursor-pointer"
-                                src={item.image}
+                                src={`${backendUrl}${item.image}`}
                                 key={index}
                                 alt=""
                             />
@@ -54,14 +55,7 @@ const Product = () => {
                     <h1 className="font-medium text-2xl mt-2">
                         {productData.name}
                     </h1>
-                    <div className="flex items-center gap-1 mt-2">
-                        <img src= {star_icon} alt="" className="w-3 5" />
-                        <img src= {star_icon} alt="" className="w-3 5" />
-                        <img src= {star_icon} alt="" className="w-3 5" />
-                        <img src= {star_icon} alt="" className="w-3 5" />
-                        <img src= {star_dull_icon} alt="" className="w-3 5" />
-                        <p className="pl-2">(122)</p>
-                    </div>
+                    <p className="text-sm text-gray-500 mt-2">100% original product.</p>
                     <p className="mt-5 text-3xl font-medium">
                         {currency}
                         {productData.price}
@@ -72,25 +66,30 @@ const Product = () => {
                     <div className="flex flex-col gap-4 my-8">
                         <p>Select Size</p>
                         <div className="flex gap-2">
-                            {productData.sizes.map((item, index) => (
+                            {productData.stock_details.map((detail, index) => (
                                 <button
-                                    onClick={() => setSize(item)}
+                                    onClick={() => setSize(detail.size)}
                                     className={`border py-2 px-4 bg-gray-100 ${
-                                        item === size ? "border-gray-900" : ""
+                                        detail.size === size
+                                            ? "border-gray-900"
+                                            : ""
                                     }`}
                                     key={index}
                                 >
-                                    {item}
+                                    {detail.size}
                                 </button>
                             ))}
                         </div>
                     </div>
-                    <button onClick={()=> addToCart(productData.id,size)} className="bg-black text-white px-8 py-3 active:bg-gray-700">
+                    <button
+                        onClick={() => addToCart(productData.id, size)}
+                        className="bg-black text-white px-8 py-3 active:bg-gray-700"
+                    >
                         ADD TO CART
                     </button>
                     <hr className="mt-8 sm:4/5"></hr>
                     <div className="text-sm text-gray-500 mt-5 flex flex-col gap-1">
-                        <p>100% original product.</p>
+                        
                         <Policy />
                     </div>
                 </div>
@@ -134,9 +133,7 @@ const Product = () => {
             </div>
 
             {/* Display related products */}
-
-            <RelatedProducts sizes = {productData.sizes} />
-
+            <RelatedProducts subcategory = { subcategory } />
         </div>
     ) : (
         <div className="opacity-0"></div>

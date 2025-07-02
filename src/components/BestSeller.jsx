@@ -5,7 +5,7 @@ import ProductItem from './ProductItem';
 
 const BestSeller = () => {
 
-    const { products } = useContext(ShopContext);
+    const { products, backendUrl } = useContext(ShopContext);
     const [bestSeller, setBestSeller] = useState([]);
 
     useEffect(() => {
@@ -29,7 +29,7 @@ const BestSeller = () => {
                     <ProductItem
                         key={index}
                         id={item.id}
-                        image={item.images[0].image}
+                        image={`${backendUrl}${item.images[0].image}`}
                         name={item.name}
                         price={item.price}
                     />

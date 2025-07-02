@@ -4,7 +4,7 @@ import Title from "./Title";
 import ProductItem from "./ProductItem";
 
 const LatestCollection = () => {
-    const { products } = useContext(ShopContext);
+    const { products, backendUrl } = useContext(ShopContext);
     const [latestProducts, setLatestProducts] = useState([]);
 
     useEffect(() => {
@@ -23,7 +23,7 @@ const LatestCollection = () => {
                     <ProductItem
                         key={index}
                         id={item.id}
-                        image={item.images[0].image}
+                        image={`${backendUrl}${item.images[0].image}`}
                         name={item.name}
                         price={item.price}
                     />

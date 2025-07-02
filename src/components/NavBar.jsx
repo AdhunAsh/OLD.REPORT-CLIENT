@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react'
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import search_icon from '../assets/search_icon.png';
 import profile_icon from '../assets/profile_icon.png'
@@ -7,6 +7,7 @@ import cart_icon from '../assets/cart_icon.png';
 import menu_icon from '../assets/menu_icon.png';
 import dropdown_icon from '../assets/dropdown_icon.png';  
 import { ShopContext } from '../context/ShopContext';
+import { useUser, useClerk } from '@clerk/clerk-react';
 
 
 
@@ -15,6 +16,17 @@ const NavBar = () => {
   const { setShowSearch, getCartCount } = useContext(ShopContext); 
 
   const [visible, setVisible] = useState(false);
+
+  // new
+  const { isSignedIn } = useUser();
+  const { signOut } = useClerk();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate('/login');
+  };
+  //
 
   return (
     <div className= 'flex items-center justify-between py-5 font-medium'>
@@ -48,12 +60,12 @@ const NavBar = () => {
       <div className='flex item-center gap-6'>
         <img onClick={()=>setShowSearch(true)} src= {search_icon} alt="" className='w-5 cursor-pointer' />
         <div className='group relative'>
-          <Link to='/login'><img src= {profile_icon} alt=""  className='w-5 cursor-pointer'/></Link>
+          <div><img src= {profile_icon} alt=""  className='w-5 cursor-pointer'/></div>
           <div className='group-hover:block hidden absolute dropdown-menu right-0 pt-4'>
             <div className= 'flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded'>
               <p className='cursor-pointer hover:text-black'>My Profile</p>
               <p className='cursor-pointer hover:text-black'>Orders</p>
-              <p className='cursor-pointer hover:text-black'>Logout</p>
+              <p onClick={handleLogout} className='cursor-pointer hover:text-black'>Logout</p>
             </div>
           </div>
         </div>
