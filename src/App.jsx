@@ -19,12 +19,14 @@ import {
   SignedOut,
   RedirectToSignIn,
 } from "@clerk/clerk-react";
+import Profile from "./pages/Profile";
+
+export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 const App = () => {
   const location = useLocation();
-  const isAuthPage = location.pathname === "/login" || location.pathname === "/signup";
 
-  const backendUrl = import.meta.env.VITE_BACKEND_URL
+
 
   return (
     <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
@@ -34,6 +36,7 @@ const App = () => {
 
       <Routes>
         {/* Public Routes */}
+        <Route path="/profile" element={<Profile />} />
         <Route path="/" element={<Home />} />
         <Route path="/collection" element={<Collection />} />
         <Route path="/about" element={<About />} />
