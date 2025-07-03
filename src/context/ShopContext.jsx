@@ -2,7 +2,6 @@ import { createContext, useEffect } from "react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import axiosInstance from "../axios";
 import { useAuth } from "@clerk/clerk-react";
 
@@ -50,12 +49,7 @@ const ShopContextProvider = (props) => {
             formData.append("size", size);
             formData.append("quantity", "1");
 
-            formData.forEach((value, key) => {
-                console.log(`${key}:`, value);
-            });
-
             const token = await getToken();
-            console.log(token);
             const response = await axiosInstance.post("/api/cart/", formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -68,9 +62,23 @@ const ShopContextProvider = (props) => {
                 toast.error(response.data.message);
             }
         } catch (error) {
-            console.log(error);
             toast.error(error.message);
         }
+    };
+
+    const setCartFromBackend = (cartArray) => {
+        const newCart = {};
+        for (const item of cartArray) {
+            const id = item.product_id.toString();
+            const size = item.size;
+            const quantity = item.quantity;
+
+            if (!newCart[id]) {
+                newCart[id] = {};
+            }
+            newCart[id][size] = quantity;
+        }
+        setCartItems(newCart);
     };
 
     const getCartCount = () => {
@@ -87,20 +95,42 @@ const ShopContextProvider = (props) => {
         return totalCount;
     };
 
+    // ---------------- To Update Cart Quantity------------------------------
     const updateQuantity = async (itemId, size, quantity) => {
-        console.log(quantity);
         let cartData = structuredClone(cartItems);
         cartData[itemId][size] = quantity;
         setCartItems(cartData);
+        console.log(`product id: ${itemId} || size: ${size} || quantity: ${quantity}`)
+
+        try {
+            const token = await getToken();
+            await axiosInstance.put(
+                "/api/cart/",
+                {
+                    product_id: itemId,
+                    size: size,
+                    quantity: quantity,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+        } catch (error) {
+            console.error("Cart update error:", error);
+            toast.error("Failed to update cart on server");
+        }
     };
 
     const getCartAmount = () => {
         let totalAmount = 0;
-        console.log("items:",cartItems)
         for (const items in cartItems) {
             let itemInfo = products.find(
                 (product) => parseInt(product.id) === parseInt(items)
             );
+            if (!itemInfo) continue;
             for (const item in cartItems[items]) {
                 try {
                     if (cartItems[items][item] > 0) {
@@ -112,11 +142,10 @@ const ShopContextProvider = (props) => {
         return totalAmount;
     };
 
+    //------------ To Get Products Data ----------------------------
     const getProductsData = async () => {
         try {
-            console.log("calling API:", backendUrl + "/api/products/");
             const res = await axiosInstance.get("/api/products/");
-            console.log(res);
             if (res.data) {
                 setProducts(res.data);
             } else {
@@ -133,6 +162,13 @@ const ShopContextProvider = (props) => {
         getProductsData();
     }, []);
 
+    // useEffect(() => {
+    //     getProductsData();
+    //     if (isSignedIn) {
+    //         fetchCartData();
+    //     }
+    // }, [isSignedIn]);
+
     const value = {
         products,
         currency,
@@ -146,6 +182,7 @@ const ShopContextProvider = (props) => {
         getCartCount,
         updateQuantity,
         getCartAmount,
+        setCartFromBackend,
         navigate,
         backendUrl,
     };
