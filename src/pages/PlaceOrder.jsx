@@ -5,7 +5,7 @@ import { ShopContext } from '../context/ShopContext'
 import { useState } from 'react'
 import axios from "axios";
 import { toast } from 'react-toastify'
-import { backendUrl } from '../../../admin/src/App'
+import { backendUrl } from '../../..//src/App'
 
 const PlaceOrder = () => {
   const { navigate } = useContext(ShopContext);

@@ -24,6 +24,8 @@ const App = () => {
   const location = useLocation();
   const isAuthPage = location.pathname === "/login" || location.pathname === "/signup";
 
+  const backendUrl = import.meta.env.VITE_BACKEND_URL
+
   return (
     <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
       <ToastContainer />
