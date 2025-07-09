@@ -2,9 +2,7 @@ import React, { useContext } from "react";
 import Title from "../components/Title";
 import CartTotal from "../components/CartTotal";
 import { ShopContext } from "../context/ShopContext";
-import { useState } from "react";
 import PaymentButton from "../components/payment";
-import { toast } from "react-toastify";
 import Address from "../components/Address";
 
 
