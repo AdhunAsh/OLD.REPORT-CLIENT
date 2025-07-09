@@ -7,17 +7,21 @@ import { useAuth } from "@clerk/clerk-react";
 
 export const ShopContext = createContext();
 
+const payemntScript = import.meta.env.VITE_PAYMENT_SCRIPT;
+
 const ShopContextProvider = (props) => {
     const currency = "₹";
-    const delivery_fee = 10;
+    const delivery_fee = 0;
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const [search, setSearch] = useState("");
     const [showSearch, setShowSearch] = useState(false);
     const [cartItems, setCartItems] = useState({});
     const [products, setProducts] = useState([]);
+    const [fetchedCart, setFetchedCart] = useState([]);
     const navigate = useNavigate();
     const { getToken, isSignedIn } = useAuth();
 
+    // To Add Products To Cart...
     const addToCart = async (itemId, size) => {
         if (!isSignedIn) {
             toast.error("You need to log in first");
@@ -66,21 +70,52 @@ const ShopContextProvider = (props) => {
         }
     };
 
+    // To Get Cart Data
+    const fetchCartData = async () => {
+        try {
+            const token = await getToken();
+            const response = await axiosInstance.get("/api/cart/", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            const items = response.data.items || [];
+            console.log("cart id: ", items);
+
+            setFetchedCart(items);
+            setCartFromBackend(items);
+            console.log("respose data :", items);
+        } catch (error) {
+            console.log(error);
+            toast.error("Failed to fetch cart data");
+        }
+    };
+
+    // useEffect(() => {
+    //     if (isSignedIn) {
+    //         fetchCartData();
+    //     }
+    // }, [isSignedIn]);
+
+    // this is used to create a formatted data , which will be easier to use for fn's like getCartCount() and updateQuantity
     const setCartFromBackend = (cartArray) => {
         const newCart = {};
         for (const item of cartArray) {
             const id = item.product_id.toString();
             const size = item.size;
             const quantity = item.quantity;
-
+            console.log("data :", cartArray);
             if (!newCart[id]) {
                 newCart[id] = {};
             }
             newCart[id][size] = quantity;
         }
         setCartItems(newCart);
+        console.log("cartItems: ", newCart);
     };
 
+    //-------------------- to get cart icons count ---------------------------------------
     const getCartCount = () => {
         let totalCount = 0;
         for (const items in cartItems) {
@@ -95,16 +130,18 @@ const ShopContextProvider = (props) => {
         return totalCount;
     };
 
-    // ---------------- To Update Cart Quantity------------------------------
+    // ---------------- To Update Cart Quantity not cart count ----------------------
     const updateQuantity = async (itemId, size, quantity) => {
         let cartData = structuredClone(cartItems);
         cartData[itemId][size] = quantity;
         setCartItems(cartData);
-        console.log(`product id: ${itemId} || size: ${size} || quantity: ${quantity}`)
+        console.log(
+            `product id: ${itemId} || size: ${size} || quantity: ${quantity}`
+        );
 
         try {
             const token = await getToken();
-            await axiosInstance.put(
+            const res = await axiosInstance.put(
                 "/api/cart/",
                 {
                     product_id: itemId,
@@ -118,12 +155,17 @@ const ShopContextProvider = (props) => {
                     },
                 }
             );
-        } catch (error) {
-            console.error("Cart update error:", error);
-            toast.error("Failed to update cart on server");
+            if (res.data) {
+                toast.success("Cart updated");
+            }
+        } catch (err) {
+            if (err.response && err.response.data && err.response.data.error) {
+                toast(err.response.data.error);
+            }
         }
     };
 
+    // ---------------------- To Get Cart Total Amount --------------------------
     const getCartAmount = () => {
         let totalAmount = 0;
         for (const items in cartItems) {
@@ -169,6 +211,18 @@ const ShopContextProvider = (props) => {
     //     }
     // }, [isSignedIn]);
 
+    //--------------------- payment ------------------
+
+    const loadRazorpay = () => {
+        return new Promise((resolve) => {
+            const script = document.createElement("script");
+            script.src = payemntScript;
+            script.onload = () => resolve(true);
+            script.onerror = () => resolve(false);
+            document.body.appendChild(script);
+        });
+    };
+
     const value = {
         products,
         currency,
@@ -182,9 +236,12 @@ const ShopContextProvider = (props) => {
         getCartCount,
         updateQuantity,
         getCartAmount,
+        fetchedCart,
         setCartFromBackend,
         navigate,
         backendUrl,
+        fetchCartData,
+        loadRazorpay,
     };
     return (
         <ShopContext.Provider value={value}>
