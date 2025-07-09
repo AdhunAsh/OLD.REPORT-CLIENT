@@ -65,9 +65,6 @@ const Address = () => {
         checkProfile();
     }, []);
 
-    useEffect(() => {
-        console.log("Updated form:", form);
-    }, [form]);
 
     const saveProfile = async () => {
         const formData = new FormData();
