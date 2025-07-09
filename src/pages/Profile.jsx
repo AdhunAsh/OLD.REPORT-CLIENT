@@ -9,10 +9,9 @@ import { useAuth } from "@clerk/clerk-react";
 const Profile = () => {
     const { getToken } = useAuth();
 
-    const [formData, setFormData] = useState("");
     const [form, setForm] = useState({
         first_name: "",
-        last_name: "",
+        Last_name: "",
         address_line1: "",
         street: "",
         postal_code: "",
@@ -33,6 +32,7 @@ const Profile = () => {
                     Authorization: `Bearer ${token}`,
                 },
             });
+            console.log(response);
             if (response.data) {
                 const {
                     first_name,
@@ -45,10 +45,10 @@ const Profile = () => {
                     phone_number,
                 } = response.data;
 
-                setFormData(response.data);
+                console.log(response.data);
                 setForm({
                     first_name: first_name || "",
-                    last_name: Last_name || "",
+                    Last_name: Last_name || "",
                     address_line1: address_line1 || "",
                     street: street || "",
                     postal_code: postal_code || "",
@@ -65,6 +65,10 @@ const Profile = () => {
     useEffect(() => {
         checkProfile();
     }, []);
+
+    useEffect(() => {
+        console.log("Updated form:", form);
+    }, [form]);
 
     const saveProfile = async () => {
         const formData = new FormData();
@@ -105,7 +109,7 @@ const Profile = () => {
                         placeholder="First name"
                     />
                     <input
-                        name="last_name"
+                        name="Last_name"
                         value={form.Last_name}
                         onChange={handleChange}
                         className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
