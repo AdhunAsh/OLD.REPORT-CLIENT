@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 
 const Address = () => {
     const { getToken } = useAuth();
+    const [ isDirty, setIsDirty] = useState(false)
 
     const [form, setForm] = useState({
         first_name: "",
@@ -19,6 +20,7 @@ const Address = () => {
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
+        setIsDirty(true); 
     };
 
     const checkProfile = async () => {
@@ -160,12 +162,14 @@ const Address = () => {
                 placeholder="Phone"
             />
 
-            <button
-                onClick={saveProfile}
-                className="bg-slate-600 text-white border border-gray-300 rounded py-2 px-3.5 w-full active:bg-slate-500"
-            >
-                Update
-            </button>
+            {isDirty && (
+                <button
+                    onClick={saveProfile}
+                    className="bg-slate-600 text-white border border-gray-300 rounded py-2 px-3.5 w-full active:bg-slate-500"
+                >
+                    SAVE
+                </button>
+            )}
         </div>
     );
 };
