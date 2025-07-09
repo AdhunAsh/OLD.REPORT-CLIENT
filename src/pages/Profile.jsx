@@ -8,16 +8,17 @@ import { useAuth } from "@clerk/clerk-react";
 import Address from "../components/Address";
 
 const Profile = () => {
-
     return (
         <div className="flex flex-col sm:flex-row justify-center gap-4 pt-5 sm:pt-14 min-h-[80vh] border-t">
-            <div>
-                <img className="w-[120px]" src={profile_icon} alt="" />
+            <div className="flex flex-col gap-4 w-full sm:max-w-[480px]">
+                <div>
+                    <img className="w-[120px]" src={profile_icon} alt="" />
+                </div>
+                <div className="text-xl sm:text-2xl my-3">
+                    <Title text1={"MY"} text2={"PROFILE"} />
+                </div>
+                <Address />
             </div>
-            <div className="text-xl sm:text-2xl my-3">
-                <Title text1={"MY"} text2={"PROFILE"} />
-            </div>
-            <Address />
         </div>
     );
 };
