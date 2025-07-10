@@ -40,7 +40,9 @@ const Cart = () => {
             toast.success("Product deleted.");
             await fetchCartData();
         } catch (error) {
-            toast.error(error.response?.data?.message || "Failed to delete product");
+            toast.error(
+                error.response?.data?.message || "Failed to delete product"
+            );
         }
     };
 
@@ -57,7 +59,8 @@ const Cart = () => {
             <div>
                 {fetchedCart.map((item, index) => {
                     const productData = products.find(
-                        (product) => parseInt(product.id) === parseInt(item.product_id)
+                        (product) =>
+                            parseInt(product.id) === parseInt(item.product_id)
                     );
                     const key = getKey(item);
                     const quantityValue = quantities[key] ?? item.quantity;
@@ -97,22 +100,38 @@ const Cart = () => {
                                     onChange={(e) => {
                                         const val = e.target.value;
                                         if (val === "more") {
-                                            setShowModals((prev) => ({ ...prev, [key]: true }));
+                                            setShowModals((prev) => ({
+                                                ...prev,
+                                                [key]: true,
+                                            }));
                                         } else {
                                             const qty = parseInt(val);
-                                            setQuantities((prev) => ({ ...prev, [key]: qty }));
-                                            updateQuantity(item.product_id, item.size, qty);
+                                            setQuantities((prev) => ({
+                                                ...prev,
+                                                [key]: qty,
+                                            }));
+                                            updateQuantity(
+                                                item.product_id,
+                                                item.size,
+                                                qty
+                                            );
                                             fetchCartData();
                                         }
                                     }}
-                                    value={quantityValue > 3 ? quantityValue : String(quantityValue)}
+                                    value={
+                                        quantityValue > 3
+                                            ? quantityValue
+                                            : String(quantityValue)
+                                    }
                                     className="border bg-slate-100 px-[5px] py-[2px] rounded"
                                 >
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
                                     {quantityValue > 3 && (
-                                        <option value={quantityValue}>{quantityValue}</option>
+                                        <option value={quantityValue}>
+                                            {quantityValue}
+                                        </option>
                                     )}
                                     <option value="more">more</option>
                                 </select>
@@ -127,12 +146,17 @@ const Cart = () => {
                                             <input
                                                 type="number"
                                                 min={1}
-                                                value={customQuantities[key] || ""}
+                                                value={
+                                                    customQuantities[key] || ""
+                                                }
                                                 onChange={(e) =>
-                                                    setCustomQuantities((prev) => ({
-                                                        ...prev,
-                                                        [key]: e.target.value,
-                                                    }))
+                                                    setCustomQuantities(
+                                                        (prev) => ({
+                                                            ...prev,
+                                                            [key]: e.target
+                                                                .value,
+                                                        })
+                                                    )
                                                 }
                                                 className="w-full border px-3 py-2 rounded mb-4"
                                                 placeholder="Quantity"
@@ -141,14 +165,18 @@ const Cart = () => {
                                                 <button
                                                     className="text-gray-700 font-medium"
                                                     onClick={() => {
-                                                        setShowModals((prev) => ({
-                                                            ...prev,
-                                                            [key]: false,
-                                                        }));
-                                                        setCustomQuantities((prev) => ({
-                                                            ...prev,
-                                                            [key]: "",
-                                                        }));
+                                                        setShowModals(
+                                                            (prev) => ({
+                                                                ...prev,
+                                                                [key]: false,
+                                                            })
+                                                        );
+                                                        setCustomQuantities(
+                                                            (prev) => ({
+                                                                ...prev,
+                                                                [key]: "",
+                                                            })
+                                                        );
                                                     }}
                                                 >
                                                     CANCEL
@@ -156,26 +184,39 @@ const Cart = () => {
                                                 <button
                                                     className="text-blue-600 font-medium"
                                                     onClick={() => {
-                                                        const val = parseInt(customQuantities[key]);
-                                                        if (!isNaN(val) && val > 0) {
-                                                            setQuantities((prev) => ({
-                                                                ...prev,
-                                                                [key]: val,
-                                                            }));
+                                                        const val = parseInt(
+                                                            customQuantities[
+                                                                key
+                                                            ]
+                                                        );
+                                                        if (
+                                                            !isNaN(val) &&
+                                                            val > 0
+                                                        ) {
+                                                            setQuantities(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    [key]: val,
+                                                                })
+                                                            );
                                                             updateQuantity(
                                                                 item.product_id,
                                                                 item.size,
                                                                 val
                                                             );
                                                             fetchCartData();
-                                                            setShowModals((prev) => ({
-                                                                ...prev,
-                                                                [key]: false,
-                                                            }));
-                                                            setCustomQuantities((prev) => ({
-                                                                ...prev,
-                                                                [key]: "",
-                                                            }));
+                                                            setShowModals(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    [key]: false,
+                                                                })
+                                                            );
+                                                            setCustomQuantities(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    [key]: "",
+                                                                })
+                                                            );
                                                         }
                                                     }}
                                                 >
@@ -190,7 +231,9 @@ const Cart = () => {
                             {/* Delete Button */}
                             <div className="flex justify-end">
                                 <img
-                                    onClick={() => deleteCart(item.id, item.size)}
+                                    onClick={() =>
+                                        deleteCart(item.id, item.size)
+                                    }
                                     className="w-5 cursor-pointer hover:bg-gray-200"
                                     src={bin_icon}
                                     alt="Delete"
@@ -207,8 +250,19 @@ const Cart = () => {
                     <CartTotal total={getCartAmount()} />
                     <div className="w-full text-end">
                         <button
-                            onClick={() => navigate("/shipping")}
-                            className="bg-black text-white text-[12px] px-4 py-2 sm:text-sm my-8 sm:px-8 sm:py-3 hover:bg-gray-700"
+                            onClick={() => {
+                                if (fetchedCart.length > 0) {
+                                    navigate("/placeorder");
+                                } else {
+                                    toast.warning("Your cart is empty");
+                                }
+                            }}
+                            // disabled={fetchedCart.length === 0}
+                            className={`bg-black text-white text-[12px] px-4 py-2 sm:text-sm my-8 sm:px-8 sm:py-3 hover:bg-gray-700 ${
+                                fetchedCart.length === 0
+                                    ? "bg-gray-400 cursor-not-allowed"
+                                    : "bg-black hover:bg-gray-700"
+                            }`}
                         >
                             PROCEED TO CHECKOUT
                         </button>

@@ -5,7 +5,7 @@ import { useContext } from "react";
 import { ShopContext } from "../context/ShopContext";
 import { toast } from "react-toastify";
 
-const PaymentButton = ({ amount }) => {
+const PaymentButton = ({ amount, disabled }) => {
     const { getToken } = useAuth();
     const { loadRazorpay, navigate } = useContext(ShopContext);
 
@@ -70,7 +70,8 @@ const PaymentButton = ({ amount }) => {
 
     return (
         <button
-            className="bg-black text-white px-16 items-center py-3 text-sm active:bg-gray-600"
+            disabled={disabled}
+            className={`bg-black text-white px-16 items-center py-3 text-sm ${disabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-black active:bg-gray-600'}`}
             onClick={handlePayment}
         >
             Pay ₹{amount}

@@ -5,7 +5,7 @@ import { useAuth } from "@clerk/clerk-react";
 import axiosInstance from "../axios";
 import { toast } from "react-toastify";
 
-const Shipping = () => {
+const ShippingAddress = ({ onConfirm }) => {
     const { navigate } = useContext(ShopContext);
     const { getToken } = useAuth();
     const [isDirty, setIsDirty] = useState(false);
@@ -57,6 +57,9 @@ const Shipping = () => {
                     phone_number: phone_number || "",
                 });
             }
+            else {
+                toast.error('fill delivery information')
+            }
         } catch (error) {
             console.log("Error fetching profile:", error);
         }
@@ -101,9 +104,9 @@ const Shipping = () => {
             await axiosInstance.post(`/address/`, formData, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            toast.success("Profile saved successfully...");
-            navigate("/placeorder")
+            toast.success("profile saved successfully...");
             setIsDirty(false);
+            onConfirm?.();
         } catch (err) {
             if (err) {
                 navigate("/login");
@@ -115,10 +118,10 @@ const Shipping = () => {
     };
 
     return (
-        <div className="flex flex-col sm:flex-row justify-center gap-4 pt-5 sm:pt-14 min-h-[80vh] border-t">
+        <div className="flex flex-col sm:flex-row justify-center gap-4 min-h-[80vh]">
             <div className="flex flex-col gap-4 w-full sm:max-w-[480px]">
                 <div className="text-xl sm:text-2xl my-3">
-                    <Title text1={"CONFIRM"} text2={"SHIPPING ADDRESS"} />
+                    <Title text1={"DELIVERY"} text2={"INFORMATION"} />
                 </div>
                     <div className="flex gap-3">
                         <input
@@ -216,4 +219,4 @@ const Shipping = () => {
     );
 };
 
-export default Shipping;
+export default ShippingAddress;

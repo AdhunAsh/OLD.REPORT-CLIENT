@@ -5,11 +5,13 @@ import { ShopContext } from "../context/ShopContext";
 import PaymentButton from "../components/payment";
 import axiosInstance from "../axios";
 import { useAuth } from "@clerk/clerk-react";
+import ShippingAddress from "../components/ShippingAddress";
 
 const PlaceOrder = () => {
     const { getCartAmount, fetchCartData } = useContext(ShopContext);
     const { getToken } = useAuth();
 
+    const [addressConfirmed, setAddressConfirmed] = useState(false);
     const [form, setForm] = useState({
         first_name: "",
         Last_name: "",
@@ -70,91 +72,9 @@ const PlaceOrder = () => {
     return (
         <div className="flex flex-col sm:flex-row justify-between gap-4 pt-5 sm:pt-14 min-h-[80vh] border-t">
             {/* left side */}
-            <div className="flex flex-col gap-4 w-full sm:max-w-[480px]">
-                <div className="text-xl sm:text-2xl my-3">
-                    <Title text1={"SHIPPING"} text2={"INFORMATION"} />
-                </div>
-                <div className="flex flex-col gap-4 w-full sm:max-w-[480px]">
-                    <div className="flex gap-3">
-                        <input
-                            name="first_name"
-                            value={form.first_name}
-                            readOnly
-                            className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-                            type="text"
-                            placeholder="First name"
-                            required
-                        />
-                        <input
-                            name="Last_name"
-                            value={form.Last_name}
-                            readOnly
-                            className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-                            type="text"
-                            placeholder="Last name"
-                            required
-                        />
-                    </div>
-                    <input
-                        name="address_line1"
-                        value={form.address_line1}
-                        readOnly
-                        className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-                        type="text"
-                        placeholder="Flat, House No, Building, Company, Apartment"
-                        required
-                    />
-                    <div className="flex gap-3">
-                        <input
-                            name="street"
-                            value={form.street}
-                            readOnly
-                            className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-                            type="text"
-                            placeholder="Street"
-                            required
-                        />
-                        <input
-                            name="postal_code"
-                            value={form.postal_code}
-                            readOnly
-                            className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-                            type="text"
-                            placeholder="PinCode"
-                            required
-                        />
-                    </div>
-                    <div className="flex gap-3">
-                        <input
-                            name="city"
-                            value={form.city}
-                            readOnly
-                            className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-                            type="text"
-                            placeholder="City"
-                            required
-                        />
-                        <input
-                            name="state"
-                            value={form.state}
-                            readOnly
-                            className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-                            type="text"
-                            placeholder="State"
-                            required
-                        />
-                    </div>
-                    <input
-                        name="phone_number"
-                        value={form.phone_number}
-                        readOnly
-                        className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-                        type="text"
-                        placeholder="Phone"
-                        required
-                    />
-                </div>
-            </div>
+
+            <ShippingAddress onConfirm={() => setAddressConfirmed(true)} />
+
             {/* right side */}
             <div className="mt-8">
                 <div className="mt-8 min-w-80">
@@ -173,7 +93,7 @@ const PlaceOrder = () => {
                     </div>
 
                     <div className="w-full text-end mt-8">
-                        <PaymentButton amount={getCartAmount()} />
+                        <PaymentButton amount={getCartAmount()} disabled={!addressConfirmed} />
                     </div>
                 </div>
             </div>

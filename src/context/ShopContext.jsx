@@ -193,6 +193,7 @@ const ShopContextProvider = (props) => {
         try {
             const res = await axiosInstance.get("/api/products/");
             if (res.data) {
+                console.log('stock: ', res.data);
                 setProducts(res.data);
             } else {
                 toast.error(res.data);
