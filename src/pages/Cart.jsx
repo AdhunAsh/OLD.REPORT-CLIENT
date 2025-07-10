@@ -19,29 +19,28 @@ const Cart = () => {
         getCartAmount,
     } = useContext(ShopContext);
 
-    const [localQuantities, setLocalQuantities] = useState({});
     const { getToken } = useAuth();
 
+    // Store quantity, modal, and custom input per item
+    const [quantities, setQuantities] = useState({});
+    const [showModals, setShowModals] = useState({});
+    const [customQuantities, setCustomQuantities] = useState({});
+
+    // Create unique key for each item (product ID + size)
+    const getKey = (item) => `${item.product_id}_${item.size}`;
+
+    // Delete item from cart
     const deleteCart = async (itemId, size) => {
         const token = await getToken();
         try {
-            const res = await axiosInstance.delete("/api/cart/", {
-                data: {
-                    item_id: itemId,
-                    size: size,
-                },
-                headers: {
-                    Authorization: `bearer ${token}`,
-                },
+            await axiosInstance.delete("/api/cart/", {
+                data: { item_id: itemId, size },
+                headers: { Authorization: `Bearer ${token}` },
             });
-            console.log("yeeeaaa");
-            toast.success("product deleted..");
+            toast.success("Product deleted.");
             await fetchCartData();
         } catch (error) {
-            console.log(error);
-            toast.error(
-                error.response?.data?.message || "Failed to delete product"
-            );
+            toast.error(error.response?.data?.message || "Failed to delete product");
         }
     };
 
@@ -58,97 +57,158 @@ const Cart = () => {
             <div>
                 {fetchedCart.map((item, index) => {
                     const productData = products.find(
-                        (product) =>
-                            parseInt(product.id) === parseInt(item.product_id)
+                        (product) => parseInt(product.id) === parseInt(item.product_id)
                     );
+                    const key = getKey(item);
+                    const quantityValue = quantities[key] ?? item.quantity;
 
                     return (
                         <div
                             key={index}
-                            className="py-4 border-t border-b text-gray-700 grid grid-cols-[4fr_0.5fr_0.5fr] sm:grid-cols-[4fr_2fr_0.5fr] items-center gap-4"
+                            className="py-4 border-t border-b text-gray-700 flex flex-row items-center justify-between gap-4 flex-wrap sm:flex-nowrap"
                         >
-                            <div className="flex items-start gap-6">
+                            {/* Product Info */}
+                            <div className="flex items-left gap-6">
                                 <img
                                     className="w-16 sm:w-20"
                                     src={`${backendUrl}${productData?.images[0].image}`}
                                     alt=""
                                 />
                                 <div>
-                                    <p className="text-xs sm:text-lg font-medium ">
+                                    <p className="text-xs sm:text-lg font-medium">
                                         {productData?.name}
                                     </p>
-                                    <div className="flex items-center gap-5 mt-2">
+                                    <div className="flex flex-col items-start gap-2 text-sm mt-1">
                                         <p>
                                             {currency}
                                             {productData?.price}
                                         </p>
-                                        <p className="px-2 sm:px-3 sm:py-1 border bg-slate-50">
+                                        <p className="px-2 border bg-slate-50">
                                             {item.size}
                                         </p>
                                     </div>
                                 </div>
                             </div>
 
-                            <input
-                                onChange={(e) => {
-                                    let val = Number(e.target.value);
+                            {/* Quantity Selector */}
+                            <div className="flex flex-col items-center gap-2">
+                                <p className="text-sm">Qty</p>
+                                <select
+                                    onChange={(e) => {
+                                        const val = e.target.value;
+                                        if (val === "more") {
+                                            setShowModals((prev) => ({ ...prev, [key]: true }));
+                                        } else {
+                                            const qty = parseInt(val);
+                                            setQuantities((prev) => ({ ...prev, [key]: qty }));
+                                            updateQuantity(item.product_id, item.size, qty);
+                                            fetchCartData();
+                                        }
+                                    }}
+                                    value={quantityValue > 3 ? quantityValue : String(quantityValue)}
+                                    className="border bg-slate-100 px-[5px] py-[2px] rounded"
+                                >
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    {quantityValue > 3 && (
+                                        <option value={quantityValue}>{quantityValue}</option>
+                                    )}
+                                    <option value="more">more</option>
+                                </select>
 
-                                    // Prevent typing less than 1 manually
-                                    if (val < 1) val = 1;
+                                {/* Modal */}
+                                {showModals[key] && (
+                                    <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+                                        <div className="bg-white p-6 rounded-lg w-[90%] max-w-sm">
+                                            <h2 className="text-lg font-semibold mb-4">
+                                                Enter Quantity
+                                            </h2>
+                                            <input
+                                                type="number"
+                                                min={1}
+                                                value={customQuantities[key] || ""}
+                                                onChange={(e) =>
+                                                    setCustomQuantities((prev) => ({
+                                                        ...prev,
+                                                        [key]: e.target.value,
+                                                    }))
+                                                }
+                                                className="w-full border px-3 py-2 rounded mb-4"
+                                                placeholder="Quantity"
+                                            />
+                                            <div className="flex justify-between">
+                                                <button
+                                                    className="text-gray-700 font-medium"
+                                                    onClick={() => {
+                                                        setShowModals((prev) => ({
+                                                            ...prev,
+                                                            [key]: false,
+                                                        }));
+                                                        setCustomQuantities((prev) => ({
+                                                            ...prev,
+                                                            [key]: "",
+                                                        }));
+                                                    }}
+                                                >
+                                                    CANCEL
+                                                </button>
+                                                <button
+                                                    className="text-blue-600 font-medium"
+                                                    onClick={() => {
+                                                        const val = parseInt(customQuantities[key]);
+                                                        if (!isNaN(val) && val > 0) {
+                                                            setQuantities((prev) => ({
+                                                                ...prev,
+                                                                [key]: val,
+                                                            }));
+                                                            updateQuantity(
+                                                                item.product_id,
+                                                                item.size,
+                                                                val
+                                                            );
+                                                            fetchCartData();
+                                                            setShowModals((prev) => ({
+                                                                ...prev,
+                                                                [key]: false,
+                                                            }));
+                                                            setCustomQuantities((prev) => ({
+                                                                ...prev,
+                                                                [key]: "",
+                                                            }));
+                                                        }
+                                                    }}
+                                                >
+                                                    APPLY
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
 
-                                    const key = `${item.product_id}_${item.size}`;
-                                    setLocalQuantities((prev) => ({
-                                        ...prev,
-                                        [key]: val,
-                                    }));
-                                }}
-                                className="border max-w-10 sm:max-w-20 px-1 sm:px-2 py-1"
-                                type="number"
-                                min={1}
-                                value={
-                                    localQuantities[
-                                        `${item.product_id}_${item.size}`
-                                    ] ?? item.quantity
-                                }
-                            />
-
-                            <button
-                                className="text-sm text-white bg-blue-500 hover:bg-blue-600 px-2 py-1 rounded"
-                                onClick={async () => {
-                                    const key = `${item.product_id}_${item.size}`;
-                                    const quantity =
-                                        localQuantities[key] ?? item.quantity;
-                                    updateQuantity(
-                                        item.product_id,
-                                        item.size,
-                                        quantity
-                                    );
-                                    await fetchCartData();
-                                }}
-                            >
-                                Update
-                            </button>
-
-                            <img
-                                onClick={() => {
-                                    deleteCart(item.id, item.size);
-                                }}
-                                className="w-4 mr-4 sm:w-5 cursor-pointer hover:bg-gray-300"
-                                src={bin_icon}
-                                alt="Delete"
-                            />
+                            {/* Delete Button */}
+                            <div className="flex justify-end">
+                                <img
+                                    onClick={() => deleteCart(item.id, item.size)}
+                                    className="w-5 cursor-pointer hover:bg-gray-200"
+                                    src={bin_icon}
+                                    alt="Delete"
+                                />
+                            </div>
                         </div>
                     );
                 })}
             </div>
 
+            {/* Cart Total & Checkout */}
             <div className="flex justify-end my-20">
                 <div className="w-full sm:w-[450px]">
                     <CartTotal total={getCartAmount()} />
                     <div className="w-full text-end">
                         <button
                             onClick={() => navigate("/placeorder")}
-                            className="bg-black text-white text-sm my-8 px-8 py-3 hover:bg-gray-700"
+                            className="bg-black text-white text-[12px] px-4 py-2 sm:text-sm my-8 sm:px-8 sm:py-3 hover:bg-gray-700"
                         >
                             PROCEED TO CHECKOUT
                         </button>

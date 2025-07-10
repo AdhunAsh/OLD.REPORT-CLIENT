@@ -38,12 +38,13 @@ const PaymentButton = ({ amount }) => {
             order_id: data.order_id,
             handler: async function (response) {
                 try {
+                    const freshToken = await getToken();
                     const verifyRes = await axios.post(
                         `${backendUrl}/verify-payment/`,
                         response,
                         {
                             headers: {
-                                Authorization: `Bearer ${token}`,
+                                Authorization: `Bearer ${freshToken}`,
                             },
                         }
                     );
