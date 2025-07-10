@@ -81,6 +81,7 @@ const Address = () => {
                 },
             });
             toast.success("Profile saved successfully...");
+            setIsDirty(false);
         } catch (err) {
             if (err) {
                 navigate("/login");

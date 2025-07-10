@@ -207,7 +207,7 @@ const Cart = () => {
                     <CartTotal total={getCartAmount()} />
                     <div className="w-full text-end">
                         <button
-                            onClick={() => navigate("/placeorder")}
+                            onClick={() => navigate("/shipping")}
                             className="bg-black text-white text-[12px] px-4 py-2 sm:text-sm my-8 sm:px-8 sm:py-3 hover:bg-gray-700"
                         >
                             PROCEED TO CHECKOUT

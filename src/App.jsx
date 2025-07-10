@@ -10,6 +10,7 @@ import PlaceOrder from "./pages/PlaceOrder";
 import Orders from "./pages/Orders";
 import Footer from "./components/Footer";
 import NavBar from "./components/NavBar";
+import Shipping from "./pages/shipping";
 import SearchBar from "./components/SearchBar";
 import { ToastContainer } from "react-toastify";
 import {
@@ -42,6 +43,7 @@ const App = () => {
         <Route path="/contact" element={<Contact />} />
         <Route path="/product/:productId" element={<Product />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/shipping" element={<Shipping />} />
 
         {/* Clerk Auth Routes */}
         <Route
