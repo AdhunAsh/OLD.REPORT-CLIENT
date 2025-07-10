@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "@clerk/clerk-react";
 import axiosInstance from "../axios";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Address = () => {
     const { getToken } = useAuth();
-    const [ isDirty, setIsDirty] = useState(false)
+    const navigate = useNavigate();
+    const [isDirty, setIsDirty] = useState(false);
 
     const [form, setForm] = useState({
         first_name: "",
@@ -20,7 +22,7 @@ const Address = () => {
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
-        setIsDirty(true); 
+        setIsDirty(true);
     };
 
     const checkProfile = async () => {
@@ -65,7 +67,6 @@ const Address = () => {
         checkProfile();
     }, []);
 
-
     const saveProfile = async () => {
         const formData = new FormData();
         Object.entries(form).forEach(([key, value]) => {
@@ -81,8 +82,12 @@ const Address = () => {
             });
             toast.success("Profile saved successfully...");
         } catch (err) {
-            console.log(err);
-            toast.error("Failed to save profile!");
+            if (err) {
+                navigate("/login");
+                toast.error("login required");
+            } else {
+                toast.error("Failed to save profile!");
+            }
         }
     };
 
@@ -126,9 +131,15 @@ const Address = () => {
                 <input
                     name="postal_code"
                     value={form.postal_code}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                        const input = e.target.value;
+                        if (/^\d{0,6}$/.test(input)) {
+                            setForm({ ...form, postal_code: input });
+                            setIsDirty(true);
+                        }
+                    }}
                     className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-                    type="number"
+                    type="text"
                     placeholder="PinCode"
                 />
             </div>
@@ -153,9 +164,15 @@ const Address = () => {
             <input
                 name="phone_number"
                 value={form.phone_number}
-                onChange={handleChange}
+                onChange={(e) => {
+                    const input = e.target.value;
+                    if (/^\d{0,10}$/.test(input)) {
+                        setForm({ ...form, phone_number: input });
+                        setIsDirty(true);
+                    }
+                }}
                 className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
-                type="number"
+                type="text"
                 placeholder="Phone"
             />
 

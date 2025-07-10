@@ -3,10 +3,11 @@ import { useAuth } from "@clerk/clerk-react";
 import { backendUrl } from "../App";
 import { useContext } from "react";
 import { ShopContext } from "../context/ShopContext";
+import { toast } from "react-toastify";
 
 const PaymentButton = ({ amount }) => {
     const { getToken } = useAuth();
-    const { loadRazorpay } = useContext(ShopContext);
+    const { loadRazorpay, navigate } = useContext(ShopContext);
 
     const handlePayment = async () => {
         const res = await loadRazorpay();
@@ -37,14 +38,19 @@ const PaymentButton = ({ amount }) => {
             order_id: data.order_id,
             handler: async function (response) {
                 try {
-                    const verifyRes = await axios.post(`${backendUrl}/verify-payment/`, response, {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    });
-                    alert("Payment Verified");
+                    const verifyRes = await axios.post(
+                        `${backendUrl}/verify-payment/`,
+                        response,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        }
+                    );
+                    toast.success("Payment Verified");
+                    navigate("/orders");
                 } catch (err) {
-                    alert("Payment Verification Failed");
+                    toast.error("Payment Verification Failed");
                 }
             },
             prefill: {
@@ -61,7 +67,14 @@ const PaymentButton = ({ amount }) => {
         rzp.open();
     };
 
-    return <button className='bg-black text-white px-16 items-center py-3 text-sm active:bg-gray-600' onClick={handlePayment}>Pay ₹{amount}</button>;
+    return (
+        <button
+            className="bg-black text-white px-16 items-center py-3 text-sm active:bg-gray-600"
+            onClick={handlePayment}
+        >
+            Pay ₹{amount}
+        </button>
+    );
 };
 
 export default PaymentButton;
