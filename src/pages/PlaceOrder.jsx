@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Title from "../components/Title";
 import CartTotal from "../components/CartTotal";
 import { ShopContext } from "../context/ShopContext";
@@ -6,7 +6,11 @@ import PaymentButton from "../components/payment";
 import Address from "../components/Address";
 
 const PlaceOrder = () => {
-    const { navigate, getCartAmount } = useContext(ShopContext);
+    const { navigate, getCartAmount, fetchCartData } = useContext(ShopContext);
+
+    useEffect(() => {
+            fetchCartData();
+        }, []);
 
     return (
         <div className="flex flex-col sm:flex-row justify-between gap-4 pt-5 sm:pt-14 min-h-[80vh] border-t">
@@ -20,7 +24,7 @@ const PlaceOrder = () => {
             {/* right side */}
             <div className="mt-8">
                 <div className="mt-8 min-w-80">
-                    <CartTotal />
+                    <CartTotal total={getCartAmount()} />
                 </div>
                 <div className="mt-12">
                     <Title text1={"PAYMENT"} text2={"METHOD"} />
