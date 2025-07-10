@@ -10,7 +10,7 @@ import PlaceOrder from "./pages/PlaceOrder";
 import Orders from "./pages/Orders";
 import Footer from "./components/Footer";
 import NavBar from "./components/NavBar";
-import Shipping from "./pages/shipping";
+import Shipping from "./pages/Shipping";
 import SearchBar from "./components/SearchBar";
 import { ToastContainer } from "react-toastify";
 import {
