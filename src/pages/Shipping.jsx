@@ -15,7 +15,7 @@ const Shipping = () => {
                 <Address />
                 <div>
                     <button
-                        onClick={() => (navigate = "/placeorder")}
+                        onClick={() => navigate("/placeorder")}
                         className="bg-black w-full text-white text-[12px] px-4 py-2 sm:text-sm my-8 sm:px-8 sm:py-3 hover:bg-gray-700"
                     >
                         CONFIRM ADDRESS

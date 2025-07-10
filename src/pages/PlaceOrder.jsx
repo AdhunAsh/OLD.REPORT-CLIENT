@@ -3,10 +3,13 @@ import Title from "../components/Title";
 import CartTotal from "../components/CartTotal";
 import { ShopContext } from "../context/ShopContext";
 import PaymentButton from "../components/payment";
-import Address from "../components/Address";
+import axiosInstance from "../axios";
+import { useAuth } from "@clerk/clerk-react";
 
 const PlaceOrder = () => {
     const { getCartAmount, fetchCartData } = useContext(ShopContext);
+    const { getToken } = useAuth();
+
     const [form, setForm] = useState({
         first_name: "",
         Last_name: "",
@@ -69,7 +72,7 @@ const PlaceOrder = () => {
             {/* left side */}
             <div className="flex flex-col gap-4 w-full sm:max-w-[480px]">
                 <div className="text-xl sm:text-2xl my-3">
-                    <Title text1={"DELIVERY"} text2={"INFORMATION"} />
+                    <Title text1={"SHIPPING"} text2={"INFORMATION"} />
                 </div>
                 <div className="flex flex-col gap-4 w-full sm:max-w-[480px]">
                     <div className="flex gap-3">
@@ -80,6 +83,7 @@ const PlaceOrder = () => {
                             className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
                             type="text"
                             placeholder="First name"
+                            required
                         />
                         <input
                             name="Last_name"
@@ -88,6 +92,7 @@ const PlaceOrder = () => {
                             className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
                             type="text"
                             placeholder="Last name"
+                            required
                         />
                     </div>
                     <input
@@ -97,6 +102,7 @@ const PlaceOrder = () => {
                         className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
                         type="text"
                         placeholder="Flat, House No, Building, Company, Apartment"
+                        required
                     />
                     <div className="flex gap-3">
                         <input
@@ -106,6 +112,7 @@ const PlaceOrder = () => {
                             className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
                             type="text"
                             placeholder="Street"
+                            required
                         />
                         <input
                             name="postal_code"
@@ -114,6 +121,7 @@ const PlaceOrder = () => {
                             className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
                             type="text"
                             placeholder="PinCode"
+                            required
                         />
                     </div>
                     <div className="flex gap-3">
@@ -124,6 +132,7 @@ const PlaceOrder = () => {
                             className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
                             type="text"
                             placeholder="City"
+                            required
                         />
                         <input
                             name="state"
@@ -132,6 +141,7 @@ const PlaceOrder = () => {
                             className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
                             type="text"
                             placeholder="State"
+                            required
                         />
                     </div>
                     <input
@@ -141,6 +151,7 @@ const PlaceOrder = () => {
                         className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
                         type="text"
                         placeholder="Phone"
+                        required
                     />
                 </div>
             </div>
