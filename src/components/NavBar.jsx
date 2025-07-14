@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
-import profile_icon from "../assets/profile.webp";
+import profile_icon from "../assets/profile_icon.png";
 import menu_icon from "../assets/menu_icon.png";
+import cart_icon from "../assets/cart_icon.png";
 import dropdown_icon from "../assets/dropdown_icon.png";
 import { useUser, useClerk } from "@clerk/clerk-react";
 
@@ -50,6 +51,14 @@ const NavBar = () => {
                     <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
                 </NavLink>
 
+                <NavLink
+                    to="/orders"
+                    className="flex flex-col items-center gap-1"
+                >
+                    <p>ORDERS</p>
+                    <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
+                </NavLink>
+
                 {/* <NavLink
                     to="/about"
                     className="flex flex-col items-center gap-1"
@@ -67,7 +76,10 @@ const NavBar = () => {
                 </NavLink>
             </ul>
 
-            <div className="flex item-center gap-2">
+            <div className="flex  item-center gap-2">
+                {/* <Link to="/cart" className="relative">
+                    <img src={cart_icon} alt="" className="w-5 min-w-5" />
+                </Link>    */}
                 <div>
                     {!isSignedIn && (
                         <p
@@ -83,13 +95,14 @@ const NavBar = () => {
                     src={search_icon}
                     alt=""
                     className="w-5 cursor-pointer items-center"
-                /> */}
+                /> */} 
+
                 <div className="group relative">
                     <div>
                         <img
                             src={profile_icon}
                             alt=""
-                            className="w-12 cursor-pointer "
+                            className="w-5 cursor-pointer "
                         />
                     </div>
                     <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
@@ -123,12 +136,7 @@ const NavBar = () => {
                     </div>
                 </div>
 
-                {/* <Link to="/cart" className="relative">
-                    <img src={cart_icon} alt="" className="w-5 min-w-5" />
-                    <p className="absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded full text-[8px]">
-                        {getCartCount()}
-                    </p>
-                </Link> */}
+                
                 <img
                     onClick={() => setVisible(true)}
                     src={menu_icon}
