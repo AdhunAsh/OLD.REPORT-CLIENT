@@ -11,6 +11,7 @@ import Orders from "./pages/Orders";
 import Footer from "./components/Footer";
 import NavBar from "./components/NavBar";
 import SearchBar from "./components/SearchBar";
+import AnimatedCard from "./components/AnimatedCard";
 import { ToastContainer } from "react-toastify";
 import {
   SignIn,
@@ -26,15 +27,14 @@ export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 const App = () => {
   const location = useLocation();
 
-
-
   return (
     <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
       <ToastContainer />
       <NavBar />
       <SearchBar />
 
-      <Routes>
+      <AnimatedCard key={location.key}>
+      <Routes location={location}>
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/collection" element={<Collection />} />
@@ -94,6 +94,7 @@ const App = () => {
           }
         />
       </Routes>
+      </AnimatedCard>
 
       <Footer />
     </div>
