@@ -130,9 +130,9 @@ const ShopContextProvider = (props) => {
         return totalCount;
     };
 
-    useEffect(()=> {
+    useEffect(() => {
         getCartCount();
-    },[cartItems])
+    }, [cartItems]);
 
     // ---------------- To Update Cart Quantity not cart count ----------------------
     const updateQuantity = async (itemId, size, quantity) => {
@@ -193,8 +193,16 @@ const ShopContextProvider = (props) => {
         try {
             const res = await axiosInstance.get("/api/products/");
             if (res.data) {
-                console.log('stock: ', res.data);
-                setProducts(res.data);
+                console.log(res.data);
+                const filteredProducts = res.data.filter(
+                    (product) =>
+                        Array.isArray(product.stock_details) &&
+                        product.stock_details.some(
+                            (stock) => stock.quantity > 0
+                        )
+                );
+                console.log("stock: ", filteredProducts);
+                setProducts(filteredProducts);
             } else {
                 toast.error(res.data);
             }

@@ -61,7 +61,7 @@ const Orders = () => {
                 <div>
                   <p className="font-semibold text-base">{item.product}</p>
                   <div className="flex gap-4 mt-1 text-sm text-gray-600">
-                    <span>Quantity: {item.length}</span>
+                    <span>Quantity: {item.quantity}</span>
                     <span>Size: {item.size}</span>
                   </div>
                   <p className="text-gray-500 text-sm mt-1">
