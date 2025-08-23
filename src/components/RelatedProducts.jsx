@@ -3,19 +3,19 @@ import { ShopContext } from "../context/ShopContext";
 import ProductItem from "./ProductItem";
 import Title from "./Title";
 
-const RelatedProducts = ({ subcategory }) => {
+const RelatedProducts = ({ subcategory, currentProductId }) => {
     const { products, backendUrl } = useContext(ShopContext);
     const [related, setRelated] = useState([]);
 
     useEffect(() => {
         if (products.length > 0 && subcategory) {
             const products_copy = products.filter(
-                (item) => item.subcategory === subcategory
+                (item) => item.subcategory === subcategory && parseInt(item.id) !== parseInt(currentProductId)
             );
 
             setRelated(products_copy.slice(0, 5));
         }
-    }, [products]);
+    }, [products, currentProductId]);
 
     return (
         <div className="my-24">
