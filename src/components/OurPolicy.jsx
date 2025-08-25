@@ -7,7 +7,7 @@ import support_img from '../assets/support_img.png'
 
 const OurPolicy = () => {
   return (
-    <div className='grid grid-cols-1 sm:grid-cols-2 gap-10 text-center py-20 text-sm md:text-base text-gray-700'>
+    <div className='grid grid-cols-1 sm:grid-cols-2 gap-10 text-center pt-20 pb-10 text-sm md:text-base text-gray-700'>
         {/* <div>
             <img src= {exchange_icon} className='w-12 m-auto mb-5' alt="" />
             <p className='font-semibold'>Easy Exchange Policy</p>

@@ -37,12 +37,12 @@ const Orders = () => {
     }, []);
 
     return (
-        <div className="border-t border-b pt-16 px-4 sm:px-10">
+        <div className="border-t border-b pt-10 px-4 sm:px-10">
             <div className="text-2xl mb-4">
                 <Title text1={"MY"} text2={"ORDERS"} />
             </div>
 
-            <div className="min-h-[200px]">
+            <div className="min-h-[140px]">
                 {loading ? (
                     <CartLoader />
                 ) : orders.length === 0 ? (

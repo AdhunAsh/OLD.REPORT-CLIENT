@@ -71,7 +71,7 @@ const PaymentButton = ({ amount, disabled }) => {
     return (
         <button
             disabled={disabled}
-            className={`bg-black text-white px-16 items-center py-3 text-sm ${disabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-black active:bg-gray-600'}`}
+            className={`bg-black text-white w-full px-16 items-center py-3 text-sm ${disabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-black active:bg-gray-600'}`}
             onClick={handlePayment}
         >
             Pay ₹{amount}

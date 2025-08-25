@@ -1,8 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import Policy from "../components/Policy";
 import RelatedProducts from "../components/RelatedProducts";
+import LoadingSpinner from "../components/LoadingSpinner";
+import { gsap } from "gsap";
 import star_icon from "../assets/star_icon.png";
 import star_dull_icon from "../assets/star_dull_icon.png";
 
@@ -14,8 +16,16 @@ const Product = () => {
     const [image, setImage] = useState("");
     const [size, setSize] = useState("");
     const [subcategory, setSubcategory] = useState("");
+    const [loading, setLoading] = useState(true);
+    
+    const containerRef = useRef(null);
+    const imageGalleryRef = useRef(null);
+    const productInfoRef = useRef(null);
 
     const fetchProductData = async () => {
+        setLoading(true);
+        await new Promise(resolve => setTimeout(resolve, 800));
+        
         products.map((item) => {
             if (parseInt(item.id) === parseInt(productId)) {
                 setProductData(item);
@@ -24,6 +34,7 @@ const Product = () => {
                 return null;
             }
         });
+        setLoading(false);
     };
 
     useEffect(() => {
@@ -34,19 +45,70 @@ const Product = () => {
         window.scrollTo(0, 0);
     }, [productId]);
 
+    useEffect(() => {
+        if (!loading && productData) {
+            const tl = gsap.timeline();
+            
+            tl.fromTo(containerRef.current, 
+                { opacity: 0, y: 30 },
+                { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }
+            )
+            .fromTo(imageGalleryRef.current.children,
+                { opacity: 0, x: -50 },
+                { opacity: 1, x: 0, duration: 0.6, stagger: 0.1, ease: "power2.out" },
+                "-=0.4"
+            )
+            .fromTo(productInfoRef.current.children,
+                { opacity: 0, y: 20 },
+                { opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: "power2.out" },
+                "-=0.4"
+            );
+        }
+    }, [loading, productData]);
+
+    const handleImageClick = (newImage) => {
+        gsap.to(imageGalleryRef.current.querySelector('.main-image'), {
+            opacity: 0,
+            scale: 0.95,
+            duration: 0.2,
+            onComplete: () => {
+                setImage(newImage);
+                gsap.to(imageGalleryRef.current.querySelector('.main-image'), {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 0.3,
+                    ease: "back.out(1.7)"
+                });
+            }
+        });
+    };
+
+    const handleAddToCart = (e) => {
+        gsap.to(e.target, {
+            scale: 0.95,
+            duration: 0.1,
+            yoyo: true,
+            repeat: 1,
+            ease: "power2.inOut",
+            onComplete: () => addToCart(productData.id, size)
+        });
+    };
+
+    if (loading) {
+        return <LoadingSpinner />;
+    }
+
     return productData ? (
-        <div className="bordet-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100 ">
+        <div ref={containerRef} className="bordet-t-2 pt-10 opacity-0">
             {/* Product Data */}
             <div className="flex gap-12 sm:gap-12 flex-col sm:flex-row ">
                 {/* Product Images */}
-                <div className="flex-1 flex flex-col-reverse gap-3 sm:flex-row">
+                <div ref={imageGalleryRef} className="flex-1 flex flex-col-reverse gap-3 sm:flex-row">
                     <div className="flex sm:flex-col overflow-x-auto sm:overflow-y-scroll justify-between sm:justify-normal sm:w-[18.7%] w-full">
                         {productData.images.map((item, index) => (
                             <img
-                                onClick={() =>
-                                    setImage(`${backendUrl}${item.image}`)
-                                }
-                                className="w-[24%] sm:w-full sm:mb-3 flex-shrink-0 cursor-pointer"
+                                onClick={() => handleImageClick(`${backendUrl}${item.image}`)}
+                                className="w-[24%] sm:w-full sm:mb-3 flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity duration-200"
                                 src={`${backendUrl}${item.image}`}
                                 key={index}
                                 alt=""
@@ -54,11 +116,11 @@ const Product = () => {
                         ))}
                     </div>
                     <div className="w-full sm:w-[80%]">
-                        <img className="w-full h-auto" src={image} alt="" />
+                        <img className="main-image w-full h-auto" src={image} alt="" />
                     </div>
                 </div>
                 {/* Product Information */}
-                <div className="flex-1">
+                <div ref={productInfoRef} className="flex-1">
                     <h1 className="font-medium text-2xl mt-2">
                         {productData.name}
                     </h1>
@@ -78,9 +140,9 @@ const Product = () => {
                             {productData.stock_details.map((detail, index) => (
                                 <button
                                     onClick={() => setSize(detail.size)}
-                                    className={`border py-2 px-4 bg-gray-100 ${
+                                    className={`border py-2 px-4 bg-gray-100 transition-all duration-200 hover:bg-gray-200 ${
                                         detail.size === size
-                                            ? "border-gray-900"
+                                            ? "border-gray-900 bg-gray-200"
                                             : ""
                                     }`}
                                     key={index}
@@ -91,8 +153,8 @@ const Product = () => {
                         </div>
                     </div>
                     <button
-                        onClick={() => addToCart(productData.id, size)}
-                        className="bg-black text-white px-8 py-3 active:bg-gray-700"
+                        onClick={handleAddToCart}
+                        className="bg-black text-white px-8 py-3 hover:bg-gray-800 transition-colors duration-200"
                     >
                         ADD TO CART
                     </button>

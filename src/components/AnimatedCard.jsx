@@ -1,15 +1,24 @@
-import { motion } from "framer-motion";
+import React, { useRef, useEffect } from 'react';
+import { gsap } from 'gsap';
 
-const AnimatedCard = ({ children, className = "" }) => (
-  <motion.div
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    transition={{ duration: 0.4, ease: "easeOut" }}
-    className={`p-6 bg-white rounded ${className}`}
-  >
-    {children}
-  </motion.div>
-);
+const AnimatedCard = ({ children, className = "" }) => {
+    const cardRef = useRef(null);
+
+    useEffect(() => {
+        gsap.fromTo(cardRef.current,
+            { opacity: 0, y: 20 },
+            { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }
+        );
+    }, [children]);
+
+    return (
+        <div
+            ref={cardRef}
+            className={`p-6 bg-white rounded opacity-0 ${className}`}
+        >
+            {children}
+        </div>
+    );
+};
 
 export default AnimatedCard;

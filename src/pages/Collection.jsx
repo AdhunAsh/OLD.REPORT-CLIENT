@@ -153,7 +153,7 @@ const Collection = () => {
                             No products found.
                         </p>
                     ) : (
-                        <div className="grid grid-cols-2 md:grid-cols-3 ld:grid-cols-4 gap-4 gap-y-6">
+                        <div className="grid grid-cols-2 md:grid-cols-3 ld:grid-cols-4 gap-4 gap-y-6 ">
                             {filteredProducts.map((item, index) => (
                                 <ProductItem
                                     key={index}

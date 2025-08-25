@@ -81,13 +81,12 @@ const ShopContextProvider = (props) => {
             });
 
             const items = response.data.items || [];
-            console.log("cart id: ", items);
-
             setFetchedCart(items);
             setCartFromBackend(items);
-            console.log("respose data :", items);
         } catch (error) {
-            console.log(error);
+            if (process.env.NODE_ENV === 'development') {
+                console.error('Cart fetch error:', error);
+            }
             toast.error("Failed to fetch cart data");
         }
     };
@@ -105,14 +104,12 @@ const ShopContextProvider = (props) => {
             const id = item.product_id.toString();
             const size = item.size;
             const quantity = item.quantity;
-            console.log("data :", cartArray);
             if (!newCart[id]) {
                 newCart[id] = {};
             }
             newCart[id][size] = quantity;
         }
         setCartItems(newCart);
-        console.log("cartItems: ", newCart);
     };
 
     //-------------------- to get cart icons count ---------------------------------------
@@ -139,9 +136,6 @@ const ShopContextProvider = (props) => {
         let cartData = structuredClone(cartItems);
         cartData[itemId][size] = quantity;
         setCartItems(cartData);
-        console.log(
-            `product id: ${itemId} || size: ${size} || quantity: ${quantity}`
-        );
 
         try {
             const token = await getToken();
@@ -193,7 +187,6 @@ const ShopContextProvider = (props) => {
         try {
             const res = await axiosInstance.get("/api/products/");
             if (res.data) {
-                console.log(res.data);
                 const filteredProducts = res.data.filter(
                     (product) =>
                         Array.isArray(product.stock_details) &&
@@ -201,7 +194,6 @@ const ShopContextProvider = (props) => {
                             (stock) => stock.quantity > 0
                         )
                 );
-                console.log("stock: ", filteredProducts);
                 setProducts(filteredProducts);
             } else {
                 toast.error(res.data);

@@ -24,7 +24,7 @@ const NavBar = () => {
     };
 
     return (
-        <div className="flex items-center justify-between py-5 font-medium">
+        <div className="flex items-center justify-between py-5 font-medium relative z-50">
             <Link to="/">
                 <img src={logo} alt="Logo" className="w-36" />
             </Link>
@@ -105,7 +105,7 @@ const NavBar = () => {
                             className="w-5 cursor-pointer "
                         />
                     </div>
-                    <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
+                    <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4 z-50">
                         <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded">
                             <NavLink to="/profile">
                                 <p className="cursor-pointer hover:text-black">
@@ -147,7 +147,7 @@ const NavBar = () => {
 
             {/* side bar for small screen*/}
             <div
-                className={`absolute top-0 right-0 bottom-0 overflow-hidden bg-white transition-all ${
+                className={`fixed top-0 right-0 bottom-0 overflow-hidden bg-white transition-all z-50 ${
                     visible ? "w-full" : "w-0"
                 }`}
             >
