@@ -32,6 +32,20 @@ const Orders = () => {
         }
     };
 
+    const getStatus = (status) => {
+        console.log(status)
+        let color = "bg-gray-500";
+        if (status === "delivered") color = "bg-green-500";
+        else if (status === "pending") color = "bg-yellow-500";
+        else if (status === "cancelled") color = "bg-red-500";
+        return (
+            <div className="flex items-center gap-2">
+                <span className={`w-2 h-2 rounded-full ${color}`}></span>
+                <span className="text-gray-700 capitalize">{status}</span>
+            </div>
+        );
+    };
+
     useEffect(() => {
         orderData();
     }, []);
@@ -88,12 +102,13 @@ const Orders = () => {
                                 </div>
 
                                 {/* Delivery status */}
-                                <div className="flex items-center gap-2">
+                                {getStatus(order.delivery_status)}
+                                {/* <div className="flex items-center gap-2">
                                     <span className="w-2 h-2 rounded-full bg-green-500"></span>
                                     <span className="text-gray-700 capitalize">
                                         {order.delivery_status}
                                     </span>
-                                </div>
+                                </div> */}
 
                                 {/* price */}
                                 <div className="flex flex-col sm:items-end gap-2 sm:text-right text-sm">
