@@ -24,7 +24,7 @@ const NavBar = () => {
     };
 
     return (
-        <div className="flex items-center justify-between py-5 font-medium relative z-50">
+        <div className="flex items-center justify-between sm:py-5 font-medium relative z-50">
             <Link to="/">
                 <img src={logo} alt="Logo" className="w-36" />
             </Link>
@@ -187,9 +187,9 @@ const NavBar = () => {
                     <NavLink
                         onClick={() => setVisible(false)}
                         className="py-2 pl-6 border"
-                        to="/about"
+                        to="/orders"
                     >
-                        ABOUT
+                        ORDERS
                     </NavLink>
                     <NavLink
                         onClick={() => setVisible(false)}

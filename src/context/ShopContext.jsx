@@ -18,6 +18,7 @@ const ShopContextProvider = (props) => {
     const [cartItems, setCartItems] = useState({});
     const [products, setProducts] = useState([]);
     const [fetchedCart, setFetchedCart] = useState([]);
+    const [bestSeller, setBestSeller] = useState([]);
     const navigate = useNavigate();
     const { getToken, isSignedIn } = useAuth();
 
@@ -187,6 +188,7 @@ const ShopContextProvider = (props) => {
         try {
             const res = await axiosInstance.get("/api/products/");
             if (res.data) {
+                console.log(res.data)
                 const filteredProducts = res.data.filter(
                     (product) =>
                         Array.isArray(product.stock_details) &&
@@ -205,9 +207,27 @@ const ShopContextProvider = (props) => {
         }
     };
 
+    const getBestSeller = async () => {
+        try {
+            const res = await axiosInstance.get("/api/products/");
+            if (res.data) {
+                const filteredData = res.data.filter(product => product.bestseller);
+                setBestSeller(filteredData);
+                
+            }
+        } catch (error){
+            console.log(error);
+        }
+    }
+
     useEffect(() => {
         getProductsData();
+        getBestSeller();
     }, []);
+
+    useEffect(() => {
+        console.log(bestSeller);
+    },[bestSeller]);
 
     // useEffect(() => {
     //     getProductsData();
@@ -247,6 +267,7 @@ const ShopContextProvider = (props) => {
         backendUrl,
         fetchCartData,
         loadRazorpay,
+        bestSeller,
     };
     return (
         <ShopContext.Provider value={value}>

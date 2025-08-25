@@ -14,7 +14,7 @@ const Home = () => {
     }, []);
 
     return (
-        <div>
+        <>
             {loading ? (
                 <HomeLoader />
             ) : (
@@ -25,7 +25,7 @@ const Home = () => {
                     <OurPolicy />
                 </>
             )}
-        </div>
+        </>
     );
 };
 
