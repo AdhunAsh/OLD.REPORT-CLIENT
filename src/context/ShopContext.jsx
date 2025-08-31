@@ -19,6 +19,7 @@ const ShopContextProvider = (props) => {
     const [products, setProducts] = useState([]);
     const [fetchedCart, setFetchedCart] = useState([]);
     const [bestSeller, setBestSeller] = useState([]);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const { getToken, isSignedIn } = useAuth();
 
@@ -66,8 +67,10 @@ const ShopContextProvider = (props) => {
             } else {
                 toast.error(response.data.message);
             }
-        } catch (error) {
-            toast.error(error.message);
+        } catch (err) {
+            if (err.response && err.response.data && err.response.data.error) {
+                toast(err.response.data.error);
+            }
         }
     };
 
@@ -185,6 +188,7 @@ const ShopContextProvider = (props) => {
 
     //------------ To Get Products Data ----------------------------
     const getProductsData = async () => {
+        setLoading(true);
         try {
             const res = await axiosInstance.get("/api/products/");
             if (res.data) {
@@ -204,6 +208,8 @@ const ShopContextProvider = (props) => {
             toast.error(
                 error.res?.data?.message || "Failed to fetch product list"
             );
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -268,6 +274,7 @@ const ShopContextProvider = (props) => {
         fetchCartData,
         loadRazorpay,
         bestSeller,
+        loading,
     };
     return (
         <ShopContext.Provider value={value}>

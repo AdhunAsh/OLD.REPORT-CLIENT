@@ -1,4 +1,4 @@
-// import React, { useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Collection from "./pages/Collection";
 import Home from "./pages/Home";
@@ -12,7 +12,7 @@ import Footer from "./components/Footer";
 import NavBar from "./components/NavBar";
 import SearchBar from "./components/SearchBar";
 import AnimatedCard from "./components/AnimatedCard";
-// import LoadingScreen from "./components/LoadingScreen"
+import Loading from "./components/Loading";
 import { ToastContainer } from "react-toastify";
 import {
     SignIn,
@@ -24,12 +24,18 @@ import {
 import Profile from "./pages/Profile";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { TOAST_CONFIG } from "./utils/constants";
+import { ShopContext } from "./context/ShopContext";
 import "react-toastify/dist/ReactToastify.css";
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 const App = () => {
     const location = useLocation();
+    const { loading } = useContext(ShopContext);
+
+    if (loading) {
+        return <Loading />;
+    }
 
     return (
         <ErrorBoundary>

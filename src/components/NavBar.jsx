@@ -3,12 +3,12 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import profile_icon from "../assets/profile_icon.png";
 import menu_icon from "../assets/menu_icon.png";
-import cart_icon from "../assets/cart_icon.png";
 import dropdown_icon from "../assets/dropdown_icon.png";
 import { useUser, useClerk } from "@clerk/clerk-react";
 
 const NavBar = () => {
     const [visible, setVisible] = useState(false);
+    const [open, setOpen] = useState(false);
 
     const { isSignedIn } = useUser();
     const { signOut } = useClerk();
@@ -24,12 +24,18 @@ const NavBar = () => {
     };
 
     return (
-        <div className="flex items-center justify-between sm:py-5 font-medium relative z-50">
+        <div className="flex items-center justify-between sm:py-2 md:py-3 lg:py-5 font-medium relative z-50">
+            <img
+                onClick={() => setVisible(true)}
+                src={menu_icon}
+                alt=""
+                className="w-5 cursor-pointer sm:hidden"
+            />
             <Link to="/">
                 <img src={logo} alt="Logo" className="w-36" />
             </Link>
 
-            <ul className="hidden sm:flex gap-5 text-sm text-gray-700">
+            <ul className="hidden sm:flex gap-5 text-sm md:text-base text-gray-700">
                 <NavLink to="/" className="flex flex-col items-center gap-1">
                     <p>HOME</p>
                     <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
@@ -80,22 +86,22 @@ const NavBar = () => {
                 {/* <Link to="/cart" className="relative">
                     <img src={cart_icon} alt="" className="w-5 min-w-5" />
                 </Link>    */}
-                <div>
+                {/* <div>
                     {!isSignedIn && (
                         <p
                             onClick={handleSignin}
-                            className="text-black px-2 py-[2px] border border-gray-500 cursor-pointer hover:bg-gray-200"
+                            className="hidden md:flex text-black px-2 py-[2px] border border-gray-500 cursor-pointer hover:bg-gray-200"
                         >
                             Sign up
                         </p>
                     )}
-                </div>
+                </div> */}
                 {/* <img
                     onClick={() => setShowSearch(true)}
                     src={search_icon}
                     alt=""
                     className="w-5 cursor-pointer items-center"
-                /> */} 
+                /> */}
 
                 <div className="group relative">
                     <div>
@@ -103,46 +109,63 @@ const NavBar = () => {
                             src={profile_icon}
                             alt=""
                             className="w-5 cursor-pointer "
+                            onClick={() => setOpen(!open)}
                         />
                     </div>
-                    <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4 z-50">
-                        <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded">
-                            <NavLink to="/profile">
-                                <p className="cursor-pointer hover:text-black">
-                                    My Profile
-                                </p>
-                            </NavLink>
-                            <p
-                                onClick={() => {
-                                    if (isSignedIn) {
-                                        navigate("/orders");
-                                    } else {
-                                        navigate("/login");
-                                    }
-                                }}
-                                className="cursor-pointer hover:text-black"
-                            >
-                                Orders
-                            </p>
-                            {isSignedIn && (
+                    {open && (
+                        <div className="absolute dropdown-menu right-0 pt-4 z-50">
+                            <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded">
+                                {!isSignedIn && (
                                 <p
-                                    onClick={handleLogout}
+                                    onClick={handleSignin}
                                     className="cursor-pointer hover:text-black"
                                 >
-                                    Logout
+                                    Sign In
                                 </p>
-                            )}
+                                )}
+
+                                {isSignedIn && (
+                                <NavLink to="/profile">
+                                    <p className="cursor-pointer hover:text-black">
+                                        My Profile
+                                    </p>
+                                </NavLink>
+                                )}
+
+                                {isSignedIn && (
+                                <p
+                                    onClick={() => {
+                                        if (isSignedIn) {
+                                            navigate("/orders");
+                                        } else {
+                                            navigate("/login");
+                                        }
+                                    }}
+                                    className="cursor-pointer hover:text-black"
+                                >
+                                    Orders
+                                </p>
+                                )}
+
+                                {isSignedIn && (
+                                    <p
+                                        onClick={handleLogout}
+                                        className="cursor-pointer hover:text-black"
+                                    >
+                                        Logout
+                                    </p>
+                                )}
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
 
-                
-                <img
+                {/* <img
                     onClick={() => setVisible(true)}
                     src={menu_icon}
                     alt=""
                     className="w-5 cursor-pointer sm:hidden"
-                />
+                /> */}
             </div>
 
             {/* side bar for small screen*/}

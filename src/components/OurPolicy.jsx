@@ -7,7 +7,7 @@ import support_img from '../assets/support_img.png'
 
 const OurPolicy = () => {
   return (
-    <div className='grid grid-cols-1 sm:grid-cols-2 gap-10 text-center pt-20 pb-10 text-sm md:text-base text-gray-700'>
+    <div className='grid grid-cols-2 sm:grid-cols-2 gap-10 text-center pt-20 sm:pt-20 pb-10 text-sm md:text-base text-gray-700'>
         {/* <div>
             <img src= {exchange_icon} className='w-12 m-auto mb-5' alt="" />
             <p className='font-semibold'>Easy Exchange Policy</p>
@@ -23,7 +23,7 @@ const OurPolicy = () => {
 
         <ReturnPolicy />
         <div>
-            <img src= { support_img } className='w-12 m-auto mb-5' alt="" />
+            <img src= { support_img } className='w-8 md:w-12 m-auto mb-5' alt="" />
             <p className='font-semibold'>Best customer support</p>
             <p className='text-gray-400'>We provide 24/7 customer support</p>
         </div>

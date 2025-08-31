@@ -32,6 +32,8 @@ const Cart = () => {
     // Create unique key for each item (product ID + size)
     const getKey = (item) => `${item.product_id}_${item.size}`;
 
+    console.log("fetchcart: ",fetchedCart)
+
     // Delete item from cart
     const deleteCart = async (itemId, size) => {
         const token = await getToken();

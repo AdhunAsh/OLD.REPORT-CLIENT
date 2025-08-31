@@ -39,17 +39,18 @@ const LatestCollection = () => {
 
     return (
         <div className="my-10">
-            <div ref={titleRef} className="text-center sm:py-8 text-3xl opacity-0">
+            <div ref={titleRef} className="text-center pb-4 sm:py-8 text-3xl opacity-0">
                 <Title text1={" LATEST "} text2={" COLLECTION "} />
             </div>
             {/* products rendering */}
 
-            <div ref={gridRef} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 gap-y-6">
+            <div ref={gridRef} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 gap-y-6">
                 {latestProducts.map((item, index) => (
                     <ProductItem
                         key={index}
                         id={item.id}
                         image={`${backendUrl}${item.images[0].image}`}
+                        hoverImage={item.images[1] ? `${backendUrl}${item.images[1].image}` : null}
                         name={item.name}
                         price={item.price}
                     />

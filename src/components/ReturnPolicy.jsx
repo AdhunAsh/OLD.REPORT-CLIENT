@@ -5,8 +5,7 @@ import Policy from "./Policy";
 const ReturnPolicy = () => {
     return (
         <div className="text-center px-4">
-            <img src={quality_icon} className="w-12 m-auto mb-5" alt="" />
-            <p className="font-semibold mb-2">Return and Exchange Policy</p>
+            <img src={quality_icon} className="w-8 md:w-12 m-auto mb-5" alt="" />
             <Policy />
             {/* <ul className="text-gray-400 text-sm md:text-base space-y-2 max-w-md mx-auto text-left">
                 <li className="flex items-center justify-center gap-2">

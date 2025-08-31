@@ -14,7 +14,7 @@ const AnimatedCard = ({ children, className = "" }) => {
     return (
         <div
             ref={cardRef}
-            className={`p-6 bg-white rounded opacity-0 ${className}`}
+            className={`bg-white rounded opacity-0 ${className}`}
         >
             {children}
         </div>

@@ -1,12 +1,18 @@
 import React, { useContext, useRef, useEffect, useState } from 'react'
 import { ShopContext } from '../context/ShopContext';
 import { gsap } from 'gsap';
+import { useNavigate } from 'react-router-dom';
 
 const Slider = () => {
     const { products, backendUrl } = useContext(ShopContext);
     const [bestSeller, setBestSeller] = useState([]);
     const carouselRef = useRef(null);
     const [currentIndex, setCurrentIndex] = useState(0);
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate("/collection");
+    };
 
     useEffect(() => {
         const bestProduct = products.filter(product => product.bestseller);
@@ -33,7 +39,7 @@ const Slider = () => {
     }, [currentIndex]);
 
   return (
-    <div className="relative h-[80vh] overflow-hidden">
+    <div className="w-full relative h-[80vh] overflow-hidden">
         <div ref={carouselRef} className="flex h-full">
             {bestSeller.map((item, index) => (
                 <div 
@@ -43,8 +49,8 @@ const Slider = () => {
                 >
                     <div className="absolute inset-0 bg-black bg-opacity-40"></div>
                     
-                    <div className="relative z-10 flex items-center justify-center h-full">
-                        <button className="border-2 border-white text-white px-8 py-3 text-lg font-medium hover:bg-white hover:text-black transition-all duration-300">
+                    <div className="flex items-center justify-center h-full">
+                        <button onClick={handleClick} className="relative z-50 border-2 border-white text-white px-8 py-3 text-lg font-medium hover:bg-white hover:text-black transition-all duration-300">
                             SHOP NOW
                         </button>
                     </div>

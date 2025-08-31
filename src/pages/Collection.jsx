@@ -71,103 +71,110 @@ const Collection = () => {
     }, [products]);
 
     return (
-        <div className="flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t">
-            {/* Left side */}
-            {/* filter option */}
-            <div className="min-w-60">
-                <p
-                    onClick={() => {
-                        setShowFilter(!showFilter);
-                    }}
-                    className="my-2 text-xl flex items-center cursor-pointer gap-2"
-                >
-                    FILTERS
-                    <img
-                        className={`h-3 sm:hidden ${
-                            showFilter ? "roate-90" : ""
-                        }`}
-                        src={dropdown_icon}
-                        alt=""
-                    />
-                </p>
-                {/* size category */}
-                <div
-                    className={`border border-gray-300 pl-5 py-3 mt-6 ${
-                        showFilter ? "" : "hidden"
-                    } sm:block`}
-                >
-                    <p className="mb-3 text-sm font-medium">SIZES</p>
-                    <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
-                        <p className="flex gap-2">
-                            <input
-                                className="w-3"
-                                type="checkbox"
-                                value={"M"}
-                                onChange={toggleSizes}
-                            />
-                            M
-                        </p>
-                        <p className="flex gap-2">
-                            <input
-                                className="w-3"
-                                type="checkbox"
-                                value={"L"}
-                                onChange={toggleSizes}
-                            />
-                            L
-                        </p>
-                        <p className="flex gap-2">
-                            <input
-                                className="w-3"
-                                type="checkbox"
-                                value={"XL"}
-                                onChange={toggleSizes}
-                            />
-                            XL
-                        </p>
+        <>
+        <Title text1={"ALL"} text2={"COLLECTIONS"} />
+            <div className="flex flex-col lg:flex-row gap-4 lg:gap-10 pt-2 sm:pt-6 lg:pt-10 border-t">
+                {/* Left side */}
+                {/* filter option */}
+                <div className="w-full lg:min-w-60 lg:w-60">
+                    <p
+                        onClick={() => {
+                            setShowFilter(!showFilter);
+                        }}
+                        className="my-2 text-xl flex items-center cursor-pointer gap-2"
+                    >
+                        FILTERS
+                        <img
+                            className={`h-3 sm:hidden ${
+                                showFilter ? "roate-90" : ""
+                            }`}
+                            src={dropdown_icon}
+                            alt=""
+                        />
+                    </p>
+                    {/* size category */}
+                    <div
+                        className={`border border-gray-300 pl-5 py-3 mt-4 lg:mt-6 ${
+                            showFilter ? "" : "hidden"
+                        } lg:block`}
+                    >
+                        <p className="mb-3 text-sm font-medium">SIZES</p>
+                        <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
+                            <p className="flex gap-2">
+                                <input
+                                    className="w-3"
+                                    type="checkbox"
+                                    value={"M"}
+                                    onChange={toggleSizes}
+                                />
+                                M
+                            </p>
+                            <p className="flex gap-2">
+                                <input
+                                    className="w-3"
+                                    type="checkbox"
+                                    value={"L"}
+                                    onChange={toggleSizes}
+                                />
+                                L
+                            </p>
+                            <p className="flex gap-2">
+                                <input
+                                    className="w-3"
+                                    type="checkbox"
+                                    value={"XL"}
+                                    onChange={toggleSizes}
+                                />
+                                XL
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Right side */}
+                <div className="flex-1">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-base sm:text-2xl mb-6">
+                        
+                        {/* product sorting */}
+                        <select
+                            onChange={(e) => setSortSize(e.target.value)}
+                            className="border-2 border-gray-300 text-sm px-3 py-2 rounded w-full sm:w-auto"
+                        >
+                            <option value="relevant">Sort by: Relevant</option>
+                            <option value="low-high">
+                                Sort by: Low to High
+                            </option>
+                            <option value="high-low">
+                                Sort by: High to Low
+                            </option>
+                        </select>
+                    </div>
+
+                    {/* map products */}
+                    <div className="min-h-[200px]">
+                        {loading ? (
+                            <CartLoader />
+                        ) : filteredProducts.length === 0 ? (
+                            <p className="text-center text-gray-500 mt-10 mb-10">
+                                No products found.
+                            </p>
+                        ) : (
+                            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 gap-y-6">
+                                {filteredProducts.map((item, index) => (
+                                    <ProductItem
+                                        key={index}
+                                        id={item.id}
+                                        image={`${backendUrl}${item.images[0].image}`}
+                                        name={item.name}
+                                        price={item.price}
+                                    />
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
-
-            {/* Right side */}
-            <div className="flex-1">
-                <div className="flex justify-between text-base sm:text-2xl mb-4">
-                    <Title text1={"ALL"} text2={"COLLECTIONS"} />
-                    {/* product sorting */}
-                    <select
-                        onChange={(e) => setSortSize(e.target.value)}
-                        className="border-2 border-gray-300 text-sm px-2"
-                    >
-                        <option value="relevant">Sort by: Relevant</option>
-                        <option value="low-high">Sort by: Low to High</option>
-                        <option value="high-low">Sort by: High to Low</option>
-                    </select>
-                </div>
-
-                {/* map products */}
-                <div className="min-h-[200px]">
-                    {loading ? (
-                        <CartLoader />
-                    ) : filteredProducts.length === 0 ? (
-                        <p className="text-center text-gray-500 mt-10 mb-10">
-                            No products found.
-                        </p>
-                    ) : (
-                        <div className="grid grid-cols-2 md:grid-cols-3 ld:grid-cols-4 gap-4 gap-y-6 ">
-                            {filteredProducts.map((item, index) => (
-                                <ProductItem
-                                    key={index}
-                                    id={item.id}
-                                    image={`${backendUrl}${item.images[0].image}`}
-                                    name={item.name}
-                                    price={item.price}
-                                />
-                            ))}
-                        </div>
-                    )}
-                </div>
-            </div>
-        </div>
+        </>
     );
 };
 

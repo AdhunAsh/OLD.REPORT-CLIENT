@@ -1,12 +1,13 @@
-import React, { useContext, useRef, useEffect } from 'react'
+import React, { useContext, useRef, useEffect, useState } from 'react'
 import { ShopContext } from '../context/ShopContext'
 import { Link } from 'react-router-dom'
 import { gsap } from 'gsap'
 
-const ProductItem = ({id, image, name, price}) => {
+const ProductItem = ({id, image, hoverImage, name, price}) => {
     const { currency } = useContext(ShopContext);
     const itemRef = useRef(null);
     const imageRef = useRef(null);
+    const [currentImage, setCurrentImage] = useState(image);
 
     useEffect(() => {
         gsap.fromTo(itemRef.current,
@@ -16,6 +17,9 @@ const ProductItem = ({id, image, name, price}) => {
     }, []);
 
     const handleMouseEnter = () => {
+        if (hoverImage) {
+            setCurrentImage(hoverImage);
+        }
         gsap.to(imageRef.current, {
             scale: 1.05,
             duration: 0.3,
@@ -24,6 +28,7 @@ const ProductItem = ({id, image, name, price}) => {
     };
 
     const handleMouseLeave = () => {
+        setCurrentImage(image);
         gsap.to(imageRef.current, {
             scale: 1,
             duration: 0.3,
@@ -34,16 +39,18 @@ const ProductItem = ({id, image, name, price}) => {
   return (
     <Link 
         ref={itemRef}
-        className='text-gray-700 cursor-pointer opacity-0' 
+        className='block cursor-pointer opacity-0' 
         to={`/product/${id}`}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
     >
-        <div className='overflow-hidden'>
-            <img ref={imageRef} className='w-full' src={image} alt="" />
+        <div className='overflow-hidden rounded-lg aspect-[9/16] bg-gray-100'>
+            <img ref={imageRef} className='w-full h-full object-cover' src={currentImage} alt="" />
         </div>
-        <p className='pt-3 pb-1 text-sm'>{name}</p>
-        <p className='text-sm font-medium'>{currency}{price}</p>
+        <div className='mt-3 space-y-1'>
+            <p className='text-sm text-gray-900 font-medium leading-tight'>{name}</p>
+            <p className='text-sm text-gray-600'>{currency}{price}</p>
+        </div>
     </Link>
   )
 }

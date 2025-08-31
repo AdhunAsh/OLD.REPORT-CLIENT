@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 import { useContext } from 'react';
 import { ShopContext } from '../context/ShopContext';
-import search_icon from '../assets/search_icon.png';
 import cross_icon from '../assets/cross_icon.png';
 import { useLocation } from 'react-router-dom';
 import { useState } from 'react';

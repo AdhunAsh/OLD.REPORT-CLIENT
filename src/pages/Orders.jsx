@@ -64,7 +64,7 @@ const Orders = () => {
                         No orders found.
                     </p>
                 ) : (
-                    orders.map((order) =>
+                    orders.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).map((order) =>
                         order.items.map((item, i) => (
                             <div
                                 key={i}
