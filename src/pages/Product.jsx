@@ -14,7 +14,7 @@ const Product = () => {
     const [image, setImage] = useState("");
     const [size, setSize] = useState("");
     const [subcategory, setSubcategory] = useState("");
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const containerRef = useRef(null);
     const imageGalleryRef = useRef(null);
@@ -97,14 +97,8 @@ const Product = () => {
     };
 
     const handleAddToCart = (e) => {
-        gsap.to(e.target, {
-            scale: 0.95,
-            duration: 0.1,
-            yoyo: true,
-            repeat: 1,
-            ease: "power2.inOut",
-            onComplete: () => addToCart(productData.id, size),
-        });
+        e.preventDefault();
+        addToCart(productData.id, size);
     };
 
     if (loading) {
@@ -185,6 +179,7 @@ const Product = () => {
                         </div>
                     </div>
                     <button
+                        type="button"
                         onClick={handleAddToCart}
                         className="bg-black text-white px-8 py-3 hover:bg-gray-800 transition-colors duration-200"
                     >
