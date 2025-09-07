@@ -6,7 +6,7 @@ import PaymentButton from "../components/payment";
 import axiosInstance from "../axios";
 import { useAuth } from "@clerk/clerk-react";
 import ShippingAddress from "../components/ShippingAddress";
-import razorpay_logo from '../assets/razorpay_logo.svg'
+import razorpay_logo from '../assets/Razorpay_logo.svg'
 
 const PlaceOrder = () => {
     const { getCartAmount, fetchCartData } = useContext(ShopContext);
