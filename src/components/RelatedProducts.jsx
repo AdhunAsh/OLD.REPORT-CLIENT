@@ -27,7 +27,7 @@ const RelatedProducts = ({ subcategory, currentProductId }) => {
                     <ProductItem
                         key={index}
                         id={item.id}
-                        image={`${backendUrl}${item.images[0].image}`}
+                        image={`${item.images[0].image}`}
                         name={item.name}
                         price={item.price}
                     />

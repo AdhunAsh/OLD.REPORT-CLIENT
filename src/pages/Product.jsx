@@ -119,11 +119,11 @@ const Product = () => {
                             <img
                                 onClick={() =>
                                     handleImageClick(
-                                        `${backendUrl}${item.image}`
+                                        `${item.image}`
                                     )
                                 }
                                 className="w-[24%] sm:w-full sm:mb-3 flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity duration-200"
-                                src={`${backendUrl}${item.image}`}
+                                src={`${item.image}`}
                                 key={index}
                                 alt=""
                             />
