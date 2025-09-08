@@ -132,7 +132,7 @@ const Product = () => {
                     <div className="w-full sm:w-[80%]">
                         <img
                             className="main-image w-full h-auto"
-                            src={image}
+                            src={`${item.image}`}
                             alt=""
                         />
                     </div>
