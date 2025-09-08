@@ -5,6 +5,7 @@ import profile_icon from "../assets/profile_icon.png";
 import menu_icon from "../assets/menu_icon.png";
 import dropdown_icon from "../assets/dropdown_icon.png";
 import { useUser, useClerk } from "@clerk/clerk-react";
+import cart_icon from '../assets/cart_icon.png';
 
 const NavBar = () => {
     const [visible, setVisible] = useState(false);
@@ -104,7 +105,14 @@ const NavBar = () => {
                 /> */}
 
                 <div className="group relative">
-                    <div>
+                    <div className="flex items-center gap-4">
+                        <img
+                            src={cart_icon}
+                            alt=""
+                            className="w-7 cursor-pointer"
+                            onClick={() => navigate("/cart")}
+                        />
+
                         <img
                             src={profile_icon}
                             alt=""
