@@ -27,7 +27,7 @@ const Product = () => {
         products.map((item) => {
             if (parseInt(item.id) === parseInt(productId)) {
                 setProductData(item);
-                setImage(`${backendUrl}${item.images[0].image}`);
+                setImage(`${item.images[0].image}`);
                 setSubcategory(item.subcategory);
                 return null;
             }
@@ -132,7 +132,7 @@ const Product = () => {
                     <div className="w-full sm:w-[80%]">
                         <img
                             className="main-image w-full h-auto"
-                            src={`${item.image}`}
+                            src={image}
                             alt=""
                         />
                     </div>
