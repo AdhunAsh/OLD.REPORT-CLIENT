@@ -22,8 +22,8 @@ const Loading = () => {
 
     return (
         <div className="fixed inset-0 bg-white flex items-center justify-center z-50">
-            <div ref={textRef} className="text-2xl font-bold text-gray-800 tracking-wider">
-                {'oldreport.in'.split('').map((letter, index) => (
+            <div ref={textRef} className="text-3xl sm:text-5xl font-bold text-gray-800 tracking-wider">
+                {'oldreport'.split('').map((letter, index) => (
                     <span key={index} className="inline-block">
                         {letter === '.' ? '.' : letter}
                     </span>
