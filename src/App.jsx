@@ -12,6 +12,9 @@ import Footer from "./components/Footer";
 import NavBar from "./components/NavBar";
 import SearchBar from "./components/SearchBar";
 import { ToastContainer } from "react-toastify";
+import LoadingOverlay from "./LoadingOverlay";
+import { AnimatePresence, motion } from "framer-motion";
+import { useLoading } from "./context/LoadingContext";
 import {
   SignIn,
   SignUp,
@@ -25,7 +28,11 @@ export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 const App = () => {
   const location = useLocation();
+const { initialLoadingDone } = useLoading();
 
+  if (!initialLoadingDone) {
+    return null; // Or render a <LoadingOverlay /> directly here if needed
+  }
 
 
   return (
@@ -33,68 +40,77 @@ const App = () => {
       <ToastContainer />
       <NavBar />
       <SearchBar />
+      <LoadingOverlay />
 
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<Home />} />
-        <Route path="/collection" element={<Collection />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/product/:productId" element={<Product />} />
-        <Route path="/profile" element={<Profile />} />
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={location.pathname}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Routes location={location} key={location.pathname}>
+            {/* Public Routes */}
+            <Route path="/" element={<Home />} />
+            <Route path="/collection" element={<Collection />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/product/:productId" element={<Product />} />
+            <Route path="/profile" element={<Profile />} />
 
-        {/* Clerk Auth Routes */}
-        <Route
-          path="/login"
-          element={
-            <SignIn routing="path" path="/login" afterSignInUrl="/" />
-          }
-        />
-        <Route
-          path="/signup"
-          element={
-            <SignedOut>
-              <SignUp routing="path" path="/signup" />
-            </SignedOut>
-          }
-        />
+            {/* Clerk Auth Routes */}
+            <Route
+              path="/login"
+              element={<SignIn routing="path" path="/login" afterSignInUrl="/" />}
+            />
+            <Route
+              path="/signup"
+              element={
+                <SignedOut>
+                  <SignUp routing="path" path="/signup" />
+                </SignedOut>
+              }
+            />
 
-        {/* Protected Routes */}
-        <Route
-          path="/cart"
-          element={
-            <SignedIn>
-              <Cart />
-            </SignedIn>
-          }
-        />
-        <Route
-          path="/placeorder"
-          element={
-            <SignedIn>
-              <PlaceOrder />
-            </SignedIn>
-          }
-        />
-        <Route
-          path="/orders"
-          element={
-            <SignedIn>
-              <Orders />
-            </SignedIn>
-          }
-        />
+            {/* Protected Routes */}
+            <Route
+              path="/cart"
+              element={
+                <SignedIn>
+                  <Cart />
+                </SignedIn>
+              }
+            />
+            <Route
+              path="/placeorder"
+              element={
+                <SignedIn>
+                  <PlaceOrder />
+                </SignedIn>
+              }
+            />
+            <Route
+              path="/orders"
+              element={
+                <SignedIn>
+                  <Orders />
+                </SignedIn>
+              }
+            />
 
-        {/* Fallback: Redirect all unknown paths for signed out users */}
-        <Route
-          path="*"
-          element={
-            <SignedOut>
-              <RedirectToSignIn />
-            </SignedOut>
-          }
-        />
-      </Routes>
+            {/* Fallback */}
+            <Route
+              path="*"
+              element={
+                <SignedOut>
+                  <RedirectToSignIn />
+                </SignedOut>
+              }
+            />
+          </Routes>
+        </motion.div>
+      </AnimatePresence>
 
       <Footer />
     </div>
