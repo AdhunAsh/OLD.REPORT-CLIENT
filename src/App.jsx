@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Collection from "./pages/Collection";
 import Home from "./pages/Home";
@@ -11,110 +11,120 @@ import Orders from "./pages/Orders";
 import Footer from "./components/Footer";
 import NavBar from "./components/NavBar";
 import SearchBar from "./components/SearchBar";
+import AnimatedCard from "./components/AnimatedCard";
+import Loading from "./components/Loading";
 import { ToastContainer } from "react-toastify";
 import LoadingOverlay from "./LoadingOverlay";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLoading } from "./context/LoadingContext";
 import {
-  SignIn,
-  SignUp,
-  SignedIn,
-  SignedOut,
-  RedirectToSignIn,
+    SignIn,
+    SignUp,
+    SignedIn,
+    SignedOut,
+    RedirectToSignIn,
 } from "@clerk/clerk-react";
 import Profile from "./pages/Profile";
+import ErrorBoundary from "./components/ErrorBoundary";
+import { TOAST_CONFIG } from "./utils/constants";
+import { ShopContext } from "./context/ShopContext";
+import "react-toastify/dist/ReactToastify.css";
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 const App = () => {
-  const location = useLocation();
-const { initialLoadingDone } = useLoading();
+    const location = useLocation();
+    const { loading } = useContext(ShopContext);
 
-  if (!initialLoadingDone) {
-    return null; // Or render a <LoadingOverlay /> directly here if needed
-  }
+    if (loading) {
+        return <Loading />;
+    }
 
+    return (
+        <ErrorBoundary>
+            <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
+                <ToastContainer {...TOAST_CONFIG} />
+                <NavBar />
+                <SearchBar />
 
-  return (
-    <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
-      <ToastContainer />
-      <NavBar />
-      <SearchBar />
-      <LoadingOverlay />
+                <AnimatedCard key={location.pathname}>
+                    <Routes location={location}>
+                        {/* Public Routes */}
+                        <Route path="/" element={<Home />} />
+                        <Route path="/collection" element={<Collection />} />
+                        <Route path="/about" element={<About />} />
+                        <Route path="/contact" element={<Contact />} />
+                        <Route
+                            path="/product/:productId"
+                            element={<Product />}
+                        />
+                        <Route path="/profile" element={<Profile />} />
+                        {/* Clerk Auth Routes */}
+                        <Route
+                            path="/login"
+                            element={
+                                <div className="bg-white flex items-center justify-center">
+                                    <SignIn
+                                        routing="path"
+                                        path="/login"
+                                        afterSignInUrl="/"
+                                    />
+                                </div>
+                            }
+                        />
+                        <Route
+                            path="/signup"
+                            element={
+                                <SignedOut>
+                                    <div className="min-h-screen bg-white flex items-center justify-center">
+                                        <SignUp routing="path" path="/signup" />
+                                    </div>
+                                </SignedOut>
+                            }
+                        />
 
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={location.pathname}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
-        >
-          <Routes location={location} key={location.pathname}>
-            {/* Public Routes */}
-            <Route path="/" element={<Home />} />
-            <Route path="/collection" element={<Collection />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/product/:productId" element={<Product />} />
-            <Route path="/profile" element={<Profile />} />
+                        {/* Protected Routes */}
+                        <Route
+                            path="/cart"
+                            element={
+                                <SignedIn>
+                                    <Cart />
+                                </SignedIn>
+                            }
+                        />
+                        <Route
+                            path="/placeorder"
+                            element={
+                                <SignedIn>
+                                    <PlaceOrder />
+                                </SignedIn>
+                            }
+                        />
+                        <Route
+                            path="/orders"
+                            element={
+                                    <SignedIn>
+                                        <Orders />
+                                    </SignedIn>
+                            }
+                        />
 
-            {/* Clerk Auth Routes */}
-            <Route
-              path="/login"
-              element={<SignIn routing="path" path="/login" afterSignInUrl="/" />}
-            />
-            <Route
-              path="/signup"
-              element={
-                <SignedOut>
-                  <SignUp routing="path" path="/signup" />
-                </SignedOut>
-              }
-            />
+                        {/* Fallback: Redirect all unknown paths for signed out users */}
+                        <Route
+                            path="*"
+                            element={
+                                <SignedOut>
+                                    <RedirectToSignIn />
+                                </SignedOut>
+                            }
+                        />
+                    </Routes>
+                </AnimatedCard>
 
-            {/* Protected Routes */}
-            <Route
-              path="/cart"
-              element={
-                <SignedIn>
-                  <Cart />
-                </SignedIn>
-              }
-            />
-            <Route
-              path="/placeorder"
-              element={
-                <SignedIn>
-                  <PlaceOrder />
-                </SignedIn>
-              }
-            />
-            <Route
-              path="/orders"
-              element={
-                <SignedIn>
-                  <Orders />
-                </SignedIn>
-              }
-            />
-
-            {/* Fallback */}
-            <Route
-              path="*"
-              element={
-                <SignedOut>
-                  <RedirectToSignIn />
-                </SignedOut>
-              }
-            />
-          </Routes>
-        </motion.div>
-      </AnimatePresence>
-
-      <Footer />
-    </div>
-  );
+                <Footer />
+            </div>
+        </ErrorBoundary>
+    );
 };
 
 export default App;

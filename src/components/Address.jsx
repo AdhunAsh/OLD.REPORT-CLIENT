@@ -21,7 +21,8 @@ const Address = () => {
     });
 
     const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setForm({ ...form, [name]: value });
         setIsDirty(true);
     };
 
@@ -29,11 +30,9 @@ const Address = () => {
         try {
             const token = await getToken();
             const response = await axiosInstance.get("/address/", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+                headers: { Authorization: `Bearer ${token}` },
             });
-            console.log(response);
+
             if (response.data) {
                 const {
                     first_name,
@@ -46,7 +45,6 @@ const Address = () => {
                     phone_number,
                 } = response.data;
 
-                console.log(response.data);
                 setForm({
                     first_name: first_name || "",
                     Last_name: Last_name || "",
@@ -67,7 +65,31 @@ const Address = () => {
         checkProfile();
     }, []);
 
+    const validateForm = () => {
+        for (const [key, value] of Object.entries(form)) {
+            if (!value.trim()) {
+                const label = key.replace("_", " ");
+                toast.error(`Please fill in ${label}`);
+                return false;
+            }
+        }
+
+        if (!/^\d{6}$/.test(form.postal_code)) {
+            toast.error("Postal code must be 6 digits");
+            return false;
+        }
+
+        if (!/^\d{10}$/.test(form.phone_number)) {
+            toast.error("Phone number must be 10 digits");
+            return false;
+        }
+
+        return true;
+    };
+
     const saveProfile = async () => {
+        if (!validateForm()) return;
+
         const formData = new FormData();
         Object.entries(form).forEach(([key, value]) => {
             formData.append(key, value);
@@ -76,15 +98,14 @@ const Address = () => {
         try {
             const token = await getToken();
             await axiosInstance.post(`/address/`, formData, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+                headers: { Authorization: `Bearer ${token}` },
             });
             toast.success("Profile saved successfully...");
+            setIsDirty(false);
         } catch (err) {
             if (err) {
                 navigate("/login");
-                toast.error("login required");
+                toast.error("Login required");
             } else {
                 toast.error("Failed to save profile!");
             }
