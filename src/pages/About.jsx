@@ -4,7 +4,7 @@ import about_img from "../assets/about_img.png";
 
 const About = () => {
     return (
-        <div>
+        <div className="animate-fadeIn">
             <div className="text-2xl text-center pt-8 border-t">
                 <Title text1={"ABOUT"} text2={"US"} />
             </div>

@@ -21,7 +21,7 @@ const PaymentButton = ({ amount, disabled }) => {
 
     try {
         const { data } = await axios.post(
-            `${backendUrl}/create-order/`,
+            `${backendUrl}create-order/`,
             { amount },
             {
                 headers: {
@@ -41,7 +41,7 @@ const PaymentButton = ({ amount, disabled }) => {
                 try {
                     const freshToken = await getToken();
                     const verifyRes = await axios.post(
-                        `${backendUrl}/verify-payment/`,
+                        `${backendUrl}verify-payment/`,
                         response,
                         {
                             headers: {

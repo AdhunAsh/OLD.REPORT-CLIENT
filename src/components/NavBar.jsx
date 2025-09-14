@@ -15,13 +15,33 @@ const NavBar = () => {
     const { signOut } = useClerk();
     const navigate = useNavigate();
 
-    const handleLogout = async () => {
-        await signOut();
+    const handleLogout = async (e) => {
+        e.preventDefault();
+        try {
+            await signOut();
+            navigate("/login");
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
+    };
+
+    const handleSignin = (e) => {
+        e.preventDefault();
         navigate("/login");
     };
-    //
-    const handleSignin = () => {
-        navigate("/login");
+
+    const handleCartClick = (e) => {
+        e.preventDefault();
+        navigate("/cart");
+    };
+
+    const handleOrdersClick = (e) => {
+        e.preventDefault();
+        if (isSignedIn) {
+            navigate("/orders");
+        } else {
+            navigate("/login");
+        }
     };
 
     return (
@@ -108,15 +128,15 @@ const NavBar = () => {
                     <div className="flex items-center gap-4">
                         <img
                             src={cart_icon}
-                            alt=""
-                            className="w-7 cursor-pointer"
-                            onClick={() => navigate("/cart")}
+                            alt="Cart"
+                            className="w-7 cursor-pointer hover:opacity-70 transition-opacity"
+                            onClick={handleCartClick}
                         />
 
                         <img
                             src={profile_icon}
-                            alt=""
-                            className="w-5 cursor-pointer "
+                            alt="Profile"
+                            className="w-5 cursor-pointer hover:opacity-70 transition-opacity"
                             onClick={() => setOpen(!open)}
                         />
                     </div>
@@ -124,44 +144,47 @@ const NavBar = () => {
                         <div className="absolute dropdown-menu right-0 pt-4 z-50">
                             <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded">
                                 {!isSignedIn && (
-                                <p
+                                <button
+                                    type="button"
                                     onClick={handleSignin}
-                                    className="cursor-pointer hover:text-black"
+                                    className="cursor-pointer hover:text-black transition-colors text-left w-full"
                                 >
                                     Sign In
-                                </p>
+                                </button>
                                 )}
 
                                 {isSignedIn && (
-                                <NavLink to="/profile">
-                                    <p className="cursor-pointer hover:text-black">
+                                <NavLink to="/profile" onClick={() => setOpen(false)}>
+                                    <p className="cursor-pointer hover:text-black transition-colors">
                                         My Profile
                                     </p>
                                 </NavLink>
                                 )}
 
                                 {isSignedIn && (
-                                <p
-                                    onClick={() => {
-                                        if (isSignedIn) {
-                                            navigate("/orders");
-                                        } else {
-                                            navigate("/login");
-                                        }
+                                <button
+                                    type="button"
+                                    onClick={(e) => {
+                                        handleOrdersClick(e);
+                                        setOpen(false);
                                     }}
-                                    className="cursor-pointer hover:text-black"
+                                    className="cursor-pointer hover:text-black transition-colors text-left w-full"
                                 >
                                     Orders
-                                </p>
+                                </button>
                                 )}
 
                                 {isSignedIn && (
-                                    <p
-                                        onClick={handleLogout}
-                                        className="cursor-pointer hover:text-black"
+                                    <button
+                                        type="button"
+                                        onClick={(e) => {
+                                            handleLogout(e);
+                                            setOpen(false);
+                                        }}
+                                        className="cursor-pointer hover:text-black transition-colors text-left w-full"
                                     >
                                         Logout
-                                    </p>
+                                    </button>
                                 )}
                             </div>
                         </div>

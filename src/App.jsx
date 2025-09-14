@@ -1,5 +1,6 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
+import PageWrapper from "./components/PageWrapper";
 import Collection from "./pages/Collection";
 import Home from "./pages/Home";
 import Product from "./pages/Product";
@@ -11,12 +12,8 @@ import Orders from "./pages/Orders";
 import Footer from "./components/Footer";
 import NavBar from "./components/NavBar";
 import SearchBar from "./components/SearchBar";
-import AnimatedCard from "./components/AnimatedCard";
 import Loading from "./components/Loading";
 import { ToastContainer } from "react-toastify";
-import LoadingOverlay from "./LoadingOverlay";
-import { AnimatePresence, motion } from "framer-motion";
-import { useLoading } from "./context/LoadingContext";
 import {
     SignIn,
     SignUp,
@@ -33,10 +30,18 @@ import "react-toastify/dist/ReactToastify.css";
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 const App = () => {
-    const location = useLocation();
     const { loading } = useContext(ShopContext);
+    const location = useLocation();
+    const [showInitialLoading, setShowInitialLoading] = useState(true);
 
-    if (loading) {
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setShowInitialLoading(false);
+        }, 1000);
+        return () => clearTimeout(timer);
+    }, []);
+
+    if (loading || showInitialLoading) {
         return <Loading />;
     }
 
@@ -47,18 +52,19 @@ const App = () => {
                 <NavBar />
                 <SearchBar />
 
-                <AnimatedCard key={location.pathname}>
-                    <Routes location={location}>
-                        {/* Public Routes */}
-                        <Route path="/" element={<Home />} />
-                        <Route path="/collection" element={<Collection />} />
-                        <Route path="/about" element={<About />} />
-                        <Route path="/contact" element={<Contact />} />
-                        <Route
-                            path="/product/:productId"
-                            element={<Product />}
-                        />
-                        <Route path="/profile" element={<Profile />} />
+                <main>
+                    <PageWrapper key={location.pathname}>
+                        <Routes>
+                            {/* Public Routes */}
+                            <Route path="/" element={<Home />} />
+                            <Route path="/collection" element={<Collection />} />
+                            <Route path="/about" element={<About />} />
+                            <Route path="/contact" element={<Contact />} />
+                            <Route
+                                path="/product/:productId"
+                                element={<Product />}
+                            />
+                            <Route path="/profile" element={<Profile />} />
                         {/* Clerk Auth Routes */}
                         <Route
                             path="/login"
@@ -87,25 +93,46 @@ const App = () => {
                         <Route
                             path="/cart"
                             element={
-                                <SignedIn>
-                                    <Cart />
-                                </SignedIn>
+                                <>
+                                    <SignedIn>
+                                        <Cart />
+                                    </SignedIn>
+                                    <SignedOut>
+                                        <div className="bg-white flex items-center justify-center">
+                                            <SignIn routing="path" path="/cart" afterSignInUrl="/cart" />
+                                        </div>
+                                    </SignedOut>
+                                </>
                             }
                         />
                         <Route
                             path="/placeorder"
                             element={
-                                <SignedIn>
-                                    <PlaceOrder />
-                                </SignedIn>
+                                <>
+                                    <SignedIn>
+                                        <PlaceOrder />
+                                    </SignedIn>
+                                    <SignedOut>
+                                        <div className="bg-white flex items-center justify-center">
+                                            <SignIn routing="path" path="/placeorder" afterSignInUrl="/placeorder" />
+                                        </div>
+                                    </SignedOut>
+                                </>
                             }
                         />
                         <Route
                             path="/orders"
                             element={
+                                <>
                                     <SignedIn>
                                         <Orders />
                                     </SignedIn>
+                                    <SignedOut>
+                                        <div className="bg-white flex items-center justify-center">
+                                            <SignIn routing="path" path="/orders" afterSignInUrl="/orders" />
+                                        </div>
+                                    </SignedOut>
+                                </>
                             }
                         />
 
@@ -118,8 +145,9 @@ const App = () => {
                                 </SignedOut>
                             }
                         />
-                    </Routes>
-                </AnimatedCard>
+                        </Routes>
+                    </PageWrapper>
+                </main>
 
                 <Footer />
             </div>

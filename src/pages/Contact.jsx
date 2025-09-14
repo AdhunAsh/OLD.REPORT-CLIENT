@@ -4,7 +4,7 @@ import contact_img from "../assets/contact_img.png";
 
 const Contact = () => {
     return (
-        <>
+        <div className="animate-fadeIn">
             <div className="text-center text-2xl pt-10 border-t">
                 <Title text1={"CONTACT"} text2={"US"} />
             </div>
@@ -24,7 +24,7 @@ const Contact = () => {
                     </p>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 

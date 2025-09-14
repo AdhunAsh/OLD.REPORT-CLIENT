@@ -11,15 +11,20 @@ export default defineConfig({
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
-          gsap: ['gsap'],
-          clerk: ['@clerk/clerk-react']
+          clerk: ['@clerk/clerk-react'],
+          router: ['react-router-dom'],
+          ui: ['framer-motion', 'react-toastify']
         }
       }
-    }
+    },
+    chunkSizeWarningLimit: 1000
   },
   server: {
-    // port: 3000,
     port: 5173,
+    host: true
+  },
+  preview: {
+    port: 4173,
     host: true
   }
 })
