@@ -1,7 +1,4 @@
 //for future requirement (if easy exchange policy, 7-days return policy, best customer support is required)
-
-import ReturnPolicy from './ReturnPolicy'
-import exchange_icon from '../assets/exchange_icon.png'
 import quality_icon from '../assets/quality_icon.png'
 import support_img from '../assets/support_img.png'
 
@@ -21,7 +18,11 @@ const OurPolicy = () => {
             Replacement will be applicable if damaged or defected products recieved, unboxing video of the product is a must for authentication</p>
         </div> */}
 
-        <ReturnPolicy />
+        <div>
+            <img src={quality_icon} className="w-12 md:w-16 h-auto object-contain m-auto mb-2" alt="" />
+            <p className='font-semibold'>Return Policy</p>
+            <p className='text-gray-400'>All sales are final. We do not accept returns or exchanges.</p>
+        </div>
         <div>
             <img src= { support_img } className='w-8 md:w-12 m-auto mb-5' alt="" />
             <p className='font-semibold'>Best customer support</p>
