@@ -1,6 +1,6 @@
 import React from "react";
 import Title from "../components/Title";
-import about_img from "../assets/about_img.png";
+// import about_img from "../assets/about_img.png";
 
 const About = () => {
     return (
@@ -11,7 +11,7 @@ const About = () => {
             <div className="my-10 flex flex-col md:flex-row gap-16">
                 <img
                     className="w-full md:max-w-[450px]"
-                    src={about_img}
+                    src= ''
                     alt=""
                 />
                 <div className="flex flex-col justify-center gap-6 md:2/4 text-gray-600">
