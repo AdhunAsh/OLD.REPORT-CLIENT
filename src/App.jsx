@@ -22,6 +22,9 @@ import {
     RedirectToSignIn,
 } from "@clerk/clerk-react";
 import Profile from "./pages/Profile";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsConditions from "./pages/TermsConditions";
+import ShippingPolicy from "./pages/ShippingPolicy";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { TOAST_CONFIG } from "./utils/constants";
 import { ShopContext } from "./context/ShopContext";
@@ -60,6 +63,9 @@ const App = () => {
                             <Route path="/collection" element={<Collection />} />
                             <Route path="/about" element={<About />} />
                             <Route path="/contact" element={<Contact />} />
+                            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                            <Route path="/terms-conditions" element={<TermsConditions />} />
+                            <Route path="/shipping-policy" element={<ShippingPolicy />} />
                             <Route
                                 path="/product/:productId"
                                 element={<Product />}
@@ -69,13 +75,15 @@ const App = () => {
                         <Route
                             path="/login"
                             element={
-                                <div className="bg-white flex items-center justify-center">
-                                    <SignIn
-                                        routing="path"
-                                        path="/login"
-                                        afterSignInUrl="/"
-                                    />
-                                </div>
+                                <SignedOut>
+                                    <div className="bg-white flex items-center justify-center">
+                                        <SignIn
+                                            routing="path"
+                                            path="/login"
+                                            afterSignInUrl="/"
+                                        />
+                                    </div>
+                                </SignedOut>
                             }
                         />
                         <Route

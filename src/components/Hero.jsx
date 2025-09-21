@@ -49,7 +49,7 @@ const HeroSection = () => {
                 {/* <SliderDesk />
       </div> */}
 
-                <div className="flex-1 relative w-full bg-gradient-to-r from-gray-50 via-gray-900 to-gray-50">
+                <div className="flex-1 relative w-full ">
                     <div className="w-4/5 mx-auto">
                         <SliderDesk />
                     </div>

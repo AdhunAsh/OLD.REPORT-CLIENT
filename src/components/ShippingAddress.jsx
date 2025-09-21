@@ -127,7 +127,7 @@ const ShippingAddress = ({ onConfirm }) => {
                         name="first_name"
                         value={form.first_name}
                         onChange={handleChange}
-                        className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
+                        className="border border-gray-300 rounded py-1.5 px-3.5 w-full transition-all duration-300 focus:border-black focus:ring-2 focus:ring-black focus:ring-opacity-20 focus:scale-105"
                         type="text"
                         placeholder="First name"
                     />
@@ -135,7 +135,7 @@ const ShippingAddress = ({ onConfirm }) => {
                         name="Last_name"
                         value={form.Last_name}
                         onChange={handleChange}
-                        className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
+                        className="border border-gray-300 rounded py-1.5 px-3.5 w-full transition-all duration-300 focus:border-black focus:ring-2 focus:ring-black focus:ring-opacity-20 focus:scale-105"
                         type="text"
                         placeholder="Last name"
                     />
@@ -144,7 +144,7 @@ const ShippingAddress = ({ onConfirm }) => {
                     name="address_line1"
                     value={form.address_line1}
                     onChange={handleChange}
-                    className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
+                    className="border border-gray-300 rounded py-1.5 px-3.5 w-full transition-all duration-300 focus:border-black focus:ring-2 focus:ring-black focus:ring-opacity-20 focus:scale-105"
                     type="text"
                     placeholder="Flat, House No, Building, Company, Apartment"
                 />
@@ -153,7 +153,7 @@ const ShippingAddress = ({ onConfirm }) => {
                         name="street"
                         value={form.street}
                         onChange={handleChange}
-                        className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
+                        className="border border-gray-300 rounded py-1.5 px-3.5 w-full transition-all duration-300 focus:border-black focus:ring-2 focus:ring-black focus:ring-opacity-20 focus:scale-105"
                         type="text"
                         placeholder="Street"
                     />
@@ -167,7 +167,7 @@ const ShippingAddress = ({ onConfirm }) => {
                                 setIsDirty(true);
                             }
                         }}
-                        className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
+                        className="border border-gray-300 rounded py-1.5 px-3.5 w-full transition-all duration-300 focus:border-black focus:ring-2 focus:ring-black focus:ring-opacity-20 focus:scale-105"
                         type="text"
                         placeholder="PinCode"
                     />
@@ -177,7 +177,7 @@ const ShippingAddress = ({ onConfirm }) => {
                         name="city"
                         value={form.city}
                         onChange={handleChange}
-                        className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
+                        className="border border-gray-300 rounded py-1.5 px-3.5 w-full transition-all duration-300 focus:border-black focus:ring-2 focus:ring-black focus:ring-opacity-20 focus:scale-105"
                         type="text"
                         placeholder="City"
                     />
@@ -185,7 +185,7 @@ const ShippingAddress = ({ onConfirm }) => {
                         name="state"
                         value={form.state}
                         onChange={handleChange}
-                        className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
+                        className="border border-gray-300 rounded py-1.5 px-3.5 w-full transition-all duration-300 focus:border-black focus:ring-2 focus:ring-black focus:ring-opacity-20 focus:scale-105"
                         type="text"
                         placeholder="State"
                     />
@@ -200,7 +200,7 @@ const ShippingAddress = ({ onConfirm }) => {
                             setIsDirty(true);
                         }
                     }}
-                    className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
+                    className="border border-gray-300 rounded py-1.5 px-3.5 w-full transition-all duration-300 focus:border-black focus:ring-2 focus:ring-black focus:ring-opacity-20 focus:scale-105"
                     type="text"
                     placeholder="Phone"
                 />
