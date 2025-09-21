@@ -19,12 +19,12 @@ const OurPolicy = () => {
         </div> */}
 
         <div>
-            <img src={quality_icon} className="w-12 md:w-16 h-auto object-contain m-auto mb-2" alt="" />
+            <img src={quality_icon} className="w-12 md:w-16 h-auto object-contain m-auto mb-5" alt="" />
             <p className='font-semibold'>Return Policy</p>
-            <p className='text-gray-400'>All sales are final. We do not accept returns or exchanges.</p>
+            <p className='text-gray-400'>All sales are final.<br /> We do not accept returns or exchanges unless <br />the product is damaged or defective.</p>
         </div>
         <div>
-            <img src= { support_img } className='w-8 md:w-12 m-auto mb-5' alt="" />
+            <img src= { support_img } className='w-12 md:w-16 m-auto mb-5' alt="" />
             <p className='font-semibold'>Best customer support</p>
             <p className='text-gray-400'>We provide 24/7 customer support</p>
         </div>
