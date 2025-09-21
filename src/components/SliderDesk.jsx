@@ -1,10 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState, useRef } from 'react'
 import { ShopContext } from '../context/ShopContext';
 
 const SliderDesk = () => {
   const { products } = useContext(ShopContext);
   const [bestSeller, setBestSeller] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const carouselRef = useRef(null);
 
   useEffect(() => {
     const bestProduct = products.filter(product => product.bestseller);
