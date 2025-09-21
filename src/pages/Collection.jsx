@@ -12,13 +12,14 @@ const Collection = () => {
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [sizes, setSizes] = useState([]);
     const [sortSize, setSortSize] = useState("relevent");
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const toggleSizes = (e) => {
-        if (sizes.includes(e.target.value)) {
-            setSizes((prev) => prev.filter((item) => item !== e.target.value));
+        const value = e.target.value;
+        if (sizes.includes(value)) {
+            setSizes((prev) => prev.filter((item) => item !== value));
         } else {
-            setSizes((prev) => [...prev, e.target.value]);
+            setSizes((prev) => [...prev, value]);
         }
     };
 
@@ -64,10 +65,11 @@ const Collection = () => {
         sortProducts();
     }, [sortSize]);
 
+    // Set loading to false when products are available
     useEffect(() => {
-        // Simulate loading or wait for data
-        const timer = setTimeout(() => setLoading(false), 1000);
-        return () => clearTimeout(timer);
+        if (products.length > 0) {
+            setLoading(false);
+        }
     }, [products]);
 
     return (
@@ -160,11 +162,12 @@ const Collection = () => {
                             </p>
                         ) : (
                             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 gap-y-6">
-                                {filteredProducts.map((item, index) => (
+                                {filteredProducts.map((item) => (
                                     <ProductItem
-                                        key={index}
+                                        key={item.id}
                                         id={item.id}
                                         image={`${item.images[0].image}`}
+                                        hoverImage={item.images[1] ? `${item.images[1].image}` : null}
                                         name={item.name}
                                         price={item.price}
                                     />

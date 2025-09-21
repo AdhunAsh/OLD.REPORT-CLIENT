@@ -1,21 +1,8 @@
-import React, { useRef, useEffect } from 'react';
-import { gsap } from 'gsap';
+import React from 'react';
 
 const AnimatedCard = ({ children, className = "" }) => {
-    const cardRef = useRef(null);
-
-    useEffect(() => {
-        gsap.fromTo(cardRef.current,
-            { opacity: 0, y: 20 },
-            { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }
-        );
-    }, [children]);
-
     return (
-        <div
-            ref={cardRef}
-            className={`bg-white rounded opacity-0 ${className}`}
-        >
+        <div className={`bg-white rounded ${className}`}>
             {children}
         </div>
     );

@@ -10,17 +10,18 @@ const PaymentButton = ({ amount, disabled }) => {
     const { loadRazorpay, navigate } = useContext(ShopContext);
 
     const handlePayment = async () => {
-        const res = await loadRazorpay();
-        if (!res) {
-            alert("Razorpay SDK failed to load.");
-            return;
-        }
+    const res = await loadRazorpay();
+    if (!res) {
+        alert("Razorpay SDK failed to load.");
+        return;
+    }
 
-        const token = await getToken();
-        console.log(token);
+    const token = await getToken();
+    console.log(token);
 
+    try {
         const { data } = await axios.post(
-            `${backendUrl}/create-order/`,
+            `${backendUrl}create-order/`,
             { amount },
             {
                 headers: {
@@ -40,7 +41,7 @@ const PaymentButton = ({ amount, disabled }) => {
                 try {
                     const freshToken = await getToken();
                     const verifyRes = await axios.post(
-                        `${backendUrl}/verify-payment/`,
+                        `${backendUrl}verify-payment/`,
                         response,
                         {
                             headers: {
@@ -55,9 +56,9 @@ const PaymentButton = ({ amount, disabled }) => {
                 }
             },
             prefill: {
-                name: "John Doe",
-                email: "john@example.com",
-                contact: "9999999999",
+                name: data.name || "John Doe",
+                email: data.email || "john@example.com",
+                contact: data.phone || "9999999999",
             },
             theme: {
                 color: "#3399cc",
@@ -66,7 +67,15 @@ const PaymentButton = ({ amount, disabled }) => {
 
         const rzp = new window.Razorpay(options);
         rzp.open();
-    };
+    } catch (err) {
+        // Show error from backend in toast
+        const errorMsg =
+            err.response?.data?.error ||
+            err.response?.data?.detail ||
+            "Failed to create order";
+        toast.error(errorMsg);
+    }
+};
 
     return (
         <button

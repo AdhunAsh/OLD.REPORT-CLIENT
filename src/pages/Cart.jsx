@@ -5,6 +5,7 @@ import bin_icon from "../assets/bin_icon.png";
 import empty_cart from "../assets/delete.png";
 import CartLoader from "../components/loaders/CartLoader";
 import CartTotal from "../components/CartTotal";
+import ButtonLoader from "../components/ButtonLoader";
 import { useAuth } from "@clerk/clerk-react";
 import axiosInstance from "../axios";
 import { toast } from "react-toastify";
@@ -28,11 +29,10 @@ const Cart = () => {
     const [showModals, setShowModals] = useState({});
     const [customQuantities, setCustomQuantities] = useState({});
     const [loading, setLoading] = useState(true);
+    const [checkoutLoading, setCheckoutLoading] = useState(false);
 
     // Create unique key for each item (product ID + size)
     const getKey = (item) => `${item.product_id}_${item.size}`;
-
-    console.log("fetchcart: ",fetchedCart)
 
     // Delete item from cart
     const deleteCart = async (itemId, size) => {
@@ -52,12 +52,11 @@ const Cart = () => {
     };
 
     useEffect(() => {
-        fetchCartData();
-    }, []);
-
-    useEffect(() => {
-        const timer = setTimeout(() => setLoading(false), 1500); // simulate loading
-        return () => clearTimeout(timer);
+        const loadCartData = async () => {
+            await fetchCartData();
+            setLoading(false);
+        };
+        loadCartData();
     }, []);
 
     return (
@@ -189,8 +188,10 @@ const Cart = () => {
                                                     />
                                                     <div className="flex justify-between">
                                                         <button
-                                                            className="text-gray-700 font-medium"
-                                                            onClick={() => {
+                                                            type="button"
+                                                            className="text-gray-700 font-medium hover:text-gray-900 transition-colors"
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
                                                                 setShowModals(
                                                                     (prev) => ({
                                                                         ...prev,
@@ -208,8 +209,10 @@ const Cart = () => {
                                                             CANCEL
                                                         </button>
                                                         <button
-                                                            className="text-blue-600 font-medium"
-                                                            onClick={() => {
+                                                            type="button"
+                                                            className="text-blue-600 font-medium hover:text-blue-800 transition-colors"
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
                                                                 const val =
                                                                     parseInt(
                                                                         customQuantities[
@@ -286,23 +289,30 @@ const Cart = () => {
                 <div className="w-full sm:w-[450px]">
                     <CartTotal total={getCartAmount()} />
                     <div className="w-full text-end">
-                        <button
-                            onClick={() => {
+                        <ButtonLoader
+                            type="button"
+                            onClick={async (e) => {
+                                e.preventDefault();
                                 if (fetchedCart.length > 0) {
-                                    navigate("/placeorder");
+                                    setCheckoutLoading(true);
+                                    setTimeout(() => {
+                                        navigate("/placeorder");
+                                        setCheckoutLoading(false);
+                                    }, 500);
                                 } else {
                                     toast.warning("Your cart is empty");
                                 }
                             }}
-                            // disabled={fetchedCart.length === 0}
-                            className={`bg-black text-white text-[12px] px-4 py-2 sm:text-sm my-8 sm:px-8 sm:py-3 hover:bg-gray-700 ${
-                                fetchedCart.length === 0
+                            loading={checkoutLoading}
+                            disabled={fetchedCart.length === 0 || checkoutLoading}
+                            className={`text-white text-[12px] px-4 py-2 sm:text-sm my-8 sm:px-8 sm:py-3 transition-colors duration-200 ${
+                                fetchedCart.length === 0 || checkoutLoading
                                     ? "bg-gray-400 cursor-not-allowed"
                                     : "bg-black hover:bg-gray-700"
                             }`}
                         >
                             PROCEED TO CHECKOUT
-                        </button>
+                        </ButtonLoader>
                     </div>
                 </div>
             </div>
